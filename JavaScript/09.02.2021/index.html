@@ -1,14 +1,77 @@
 <!DOCTYPE html>
 <html>
-    <title>Web Page</title>
-    <head>
-        <script>
-            
-            // Code Field
+<title>Web Page</title>
 
-        </script>
-    </head>
-    <body>
-        
-    </body>
+<head>
+    <script type="text/javascript">
+        function isNumber(symbol) {
+            return symbol >= '0' && symbol <= '9'
+        }
+
+        function isSign(symbol) {
+            return symbol == '*' || symbol == '/' || symbol == '+' || symbol == '-'
+        }
+
+        function calculate() {
+            let example = document.getElementById('example').value
+            let numbers = []
+            let signs = []
+            let number = ''
+
+            for (symbol of example)
+                if (isNumber(symbol))
+                    number += symbol
+                else if (isSign(symbol)) {
+                    signs.push(symbol)
+                    if (number.length > 0) {
+                        numbers.push(parseInt(number))
+                        number = ''
+                    }
+                }
+
+            if (number.length > 0) {
+                numbers.push(parseInt(number))
+                number = ''
+            }
+
+            for (let i = 0; i < signs.length; i++) {
+                if (signs[i] == '*') {
+                    numbers[i] = numbers[i] * numbers[i + 1]
+                    numbers.splice(i + 1, 1)
+                    signs.splice(i, 1)
+                } else if (signs[i] == '/') {
+                    numbers[i] = numbers[i] / numbers[i + 1]
+                    numbers.splice(i + 1, 1)
+                    signs.splice(i, 1)
+                }
+            }
+
+            while (numbers.length != 1)
+                for (let i = 0; i < signs.length; i++) {
+                    if (signs[i] == '+') {
+                        numbers[i] = numbers[i] + numbers[i + 1]
+                        numbers.splice(i + 1, 1)
+                        signs.splice(i, 1)
+                    } else if (signs[i] == '-') {
+                        numbers[i] = numbers[i] - numbers[i + 1]
+                        numbers.splice(i + 1, 1)
+                        signs.splice(i, 1)
+                    }
+                }
+
+
+            document.getElementById('result').innerHTML = numbers
+        }
+    </script>
+</head>
+
+<body>
+    <label>Введите пример: </label>
+    <input id="example" type="text"><br><br>
+
+    <button onclick="calculate()">Рассчитать</button>
+
+    <p>Результат: <strong id="result"></strong></p>
+</body>
+
 </html>
