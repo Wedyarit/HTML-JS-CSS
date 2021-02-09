@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body style="background-color:gainsboro;">
+    <div id="app" class="center">
+        <button @click="setup_data()" class="default-button"
+            style="background-color:#92bCa6; font-size: 45px;">Загрузить базу
+            данных</button><br>
+
+        <div class="card-register green">
+            <div class="additional-vertical">
+                <div class="user-card">
+                    <h1>Новый пользователь</h1>
+                </div>
+            </div>
+
+            <div class="new-user">
+                <form action="" method="post" onsubmit="return form_validation();" onchange="return form_validation();">
+                    <p class="register_test">Имя:</p>
+                    <input type="text" name="name" id="name"><br>
+                    <p class="register_test">Возраст:</p>
+                    <input type="number" name="age" id="age"><br>
+                    <p class="register_test">Адрес:</p>
+                    <input type="text" name="location" id="location"><br>
+                    <p class="register_test">Ссылка на аватар:</p>
+                    <input type="text" name="avatar" id="avatar"><br><br>
+                    <button @click="add_user()" class="default-button"
+                        style="background-color:#92bCa6">Добавить</button><br>
+                    <br>
+                </form>
+            </div>
+        </div>
+
+        <div class="card green" v-for="result in results">
+            <div class="additional-horizontal">
+                <div class="user-card">
+                    <img :src="result.avatar" v-bind:alt="results" width="110" height="110" class="center">
+                </div>
+            </div>
+            <div class="general">
+                <h1>{{ result.name }}</h1>
+                <p>{{ result.location }}</p>
+                <p>{{ result.age }} years old</p>
+                <span class="more">Интересный пользователь</span>
+                <button class="default-button" style="background-color:#f14e4e"
+                    click="delete_user( result.id )">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

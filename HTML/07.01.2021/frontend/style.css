@@ -1,0 +1,122 @@
+
+html, body {
+  background: gainsboro;
+  font-family: Arial, Verdana, sans-serif;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  border-radius: 50%;
+}
+
+.card {
+  width: 450px;
+  height: 250px;
+  background-color: #fff;
+  background: linear-gradient(#f8f8f8, #fff);
+  box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+  border-radius: 12px;
+  position: relative;
+  margin: 1.5rem;
+}
+
+.card h1 {
+  text-align: center;
+}
+
+.card-register h1 {
+  text-align: center;
+}
+
+.card .additional-horizontal {
+  position: absolute;
+  width: 150px;
+  height: 100%;
+  background: linear-gradient(#92bCa6, #A2CCB6);
+  transition: width 0.4s;
+  z-index: 2;
+}
+
+.card-register {
+  width: 450px;
+  height: 550px;
+  background-color: #fff;
+  background: linear-gradient(#f8f8f8, #fff);
+  box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+  border-radius: 6px;
+  position: relative;
+  margin: 1.5rem;
+    border-radius: 12px;
+}
+
+
+.card-register .additional-vertical {
+  position: absolute;
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(#92bCa6, #A2CCB6);
+  transition: width 0.4s;
+  color: white;
+  z-index: 2;
+}
+
+.card-register .new-user {
+  width: 300px;
+  height: 100%;
+  position: absolute;
+  top: 8rem;
+  right: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  padding: 0rem;
+  padding-top: 0;
+}
+
+.card-register .general .more {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 0.9em;
+}
+
+.card .general {
+  width: 300px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  padding: 1rem;
+  padding-top: 0;
+}
+
+.card .general .more {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 0.9em;
+}
+
+.default-button {
+    display:inline-block;
+    padding:0.3em 1rem;
+    margin:0 0.1em 0.1em 0;
+    border:0.16em solid rgba(255,255,255,0);
+    border-radius:2em;
+    box-sizing: border-box;
+    text-decoration:none;
+    font-family:'Roboto',sans-serif;
+    font-weight:300;
+    color:#FFFFFF;
+    text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+    text-align:center;
+    transition: all 0.2s;
+}
+
+.default-button :hover{
+    border-color: rgba(255,255,255,1);
+}
