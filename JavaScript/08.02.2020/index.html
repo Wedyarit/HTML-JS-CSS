@@ -3,20 +3,26 @@
     <title>Web Page</title>
     <head>
         <script>
-            let a, b
+            function randomInteger(min, max) {
+                let rand = min - 0.5 + Math.random() * (max - min + 1);
+                
+                return Math.round(rand);
+            }
+            
+            let min = 1, max = 100
+            let hiddenNumber = randomInteger(min, max)
+            let enteredNumber = parseInt(prompt(`Диапазаон: [${min}-${max}]\nУгадайте случайное число: `))
 
-            a = parseInt(prompt('[Квадрат числа]\nВведите первое число: '))
-            alert(`Квадрат числа ${a}: ${a ** 2}`)
+            while(enteredNumber != hiddenNumber) {
+                if (enteredNumber > hiddenNumber)
+                    alert('Загаданное число меньше!')
+                else if (enteredNumber < hiddenNumber) 
+                    alert('Загаданное число больше!')
 
-            a = parseInt(prompt('[Среднее арифметическое]\nВведите первое число: '))
-            b = parseInt(prompt('[Среднее арифметическое]\nВведите второе число: '))
-            alert(`Среднее арифметическое: ${(a  + b) / 2}`)
+                enteredNumber = parseInt(prompt('Угадайте случайное число: '))
+            }
 
-            a = parseInt(prompt('[Площадь квадрата]\nВведите длину квадрата: '))
-            alert(`Плошадь квадрата: ${a ** 2}`)
-
-            a = parseFloat(prompt('[Количество миль]\nВведите количество километров: '))
-            alert(`Количество миль: ${a * 0.621371}`)
+            alert(`Верно! Загаданное число: ${hiddenNumber}`)
         </script>
     </head>
     <body>
