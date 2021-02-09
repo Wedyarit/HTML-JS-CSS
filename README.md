@@ -1,4 +1,4 @@
-# HTML Courseworks
+# Courseworks
 
 List of works on the courses of HTML, JavaScript and CSS.
 
