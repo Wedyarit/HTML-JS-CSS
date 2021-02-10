@@ -15,8 +15,8 @@ Attempt:
 
 Result: 
 ```
-> 2 "cows" (two numbers: "2" and "3" - guessed at the wrong positions)
-> 1 “bull” (one number “1” is guessed right up to the position).
+> 2 cows (two numbers: "2" and "3" - guessed at the wrong positions)
+> 1 bull (one number “1” is guessed right up to the position)
 ```
 
 ## Contributing
