@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<title>Web Page</title>
+
+<head>
+    <script type="text/javascript">
+        function randomInteger(min, max) {
+            let rand = min - 0.5 + Math.random() * (max - min + 1);
+
+            return Math.round(rand);
+        }
+
+        let min = 1000, max = 9999
+        let hiddenNumber = randomInteger(min, max).toString()
+        let enteredNumber = prompt(`Диапазаон: [${min}-${max}]\nУгадайте случайное число: \n\n(Загаданное число: ${hiddenNumber})`)
+
+        while (enteredNumber != hiddenNumber) {
+            let bulls = 0, cows = 0
+            for (let i = 0; i < enteredNumber.length; i++)
+                for (let j = 0; j < hiddenNumber.length; j++)
+                    if (enteredNumber[i] == hiddenNumber[j] && i == j)
+                        bulls++
+                    else if (enteredNumber[i] == hiddenNumber[j] && i != j)
+                        cows++
+
+            alert(`${cows} коров(ы)\n${bulls} быков(а)`)
+
+            enteredNumber = prompt(`Угадайте случайное число: \n\n(Загаданное число: ${hiddenNumber})`)
+        }
+
+        alert(`Верно! Загаданное число: ${hiddenNumber}`)
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
