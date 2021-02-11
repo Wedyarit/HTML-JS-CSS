@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<title>Web Page</title>
+
+<head>
+    <script type="text/javascript">
+        let size
+
+        function swap(x, y) {
+            var t = x;
+            x = y;
+            y = t;
+            return [x, y];
+        }
+
+
+        function shuffle2dColumns(arr) {
+            let length = arr[0].length - 2;
+            let indexes = shuffle([...Array.from({ length }).keys()]);
+            for (let j = 0; j < arr.length; j++) {
+                let row = arr[j]
+                arr[j] = [row[0],
+                ...indexes.map(i => row[1 + i]),
+                row[length + 1]];
+            }
+            return arr;
+        }
+
+        function getShiftedArray(array, n) {
+            var i = array.length - n;
+            var front = array.slice(0, i);
+            var back = array.slice(i);
+            return back.concat(front);
+        }
+
+        function shuffle(a) {
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function randomInteger(min, max) {
+            let rand = min - 0.5 + Math.random() * (max - min + 1);
+
+            return Math.round(rand);
+        }
+
+        onload = function () {
+            let table = document.body.getElementsByTagName('table')[0]
+
+            table.onclick = function (event) {
+                chosen_cell = event.target
+                if (chosen_cell.tagName != 'TD') return
+                chosen_cell.innerHTML = randomInteger(1, size)
+            }
+        }
+
+        function create() {
+            size = parseInt(document.getElementById('size').value)
+            let sqrt_size = Math.sqrt(size)
+
+            if (!Number.isInteger(sqrt_size)) {
+                alert("Некорректный размер")
+                return
+            }
+
+            var tbody = document.getElementsByTagName('tbody')[0]
+            while (tbody.firstChild)
+                tbody.removeChild(tbody.lastChild)
+
+            for (let i = 0; i < size; i++) {
+                let tr = document.createElement('tr')
+                for (let j = 0; j < size; j++) {
+                    let td = document.createElement('td')
+                    if ((i + 1) % sqrt_size == 0)
+                        td.style.borderBottom = '3px solid'
+                    else if (i % sqrt_size == 0)
+                        td.style.borderTop = '3px solid'
+                    if ((j + 1) % sqrt_size == 0)
+                        td.style.borderRight = '3px solid'
+                    else if (j % sqrt_size == 0)
+                        td.style.borderLeft = '3px solid'
+                    tr.appendChild(td)
+                }
+                tbody.appendChild(tr)
+            }
+        }
+
+        function game() {
+            numbers = []
+
+            var row_numbers = [];
+            for (var i = 1; i <= size; i++) {
+                row_numbers.push(i);
+            }
+
+            shuffle(row_numbers)
+
+            for (let i = 0; i < Math.sqrt(size); i++) {
+                row_numbers = getShiftedArray(row_numbers, Math.sqrt(size) - 1)
+                numbers.push(row_numbers)
+                for (let j = 1; j < Math.sqrt(size); j++)
+                    numbers.push(getShiftedArray(row_numbers, j * Math.sqrt(size)))
+            }
+
+            let trs = document.getElementsByTagName('tr')
+            let new_numbers = []
+
+            for (let i = 1; i <= numbers.length; i++)
+                if (i % Math.sqrt(size) == 0)
+                    for (shuffled_array of shuffle(numbers.slice(i - Math.sqrt(size), i)))
+                        new_numbers.push(shuffled_array)
+
+            /*for (let i = 0; i < new_numbers.length; i++) {
+                let row = new_numbers[i]
+                for (let j = 0; j < row.length; j += Math.sqrt(size)) {
+                    for (let g = 0; g < Math.sqrt(size); g++) {
+                        let value = new_numbers[i][j + g]
+                        new_numbers[i][j + g] = new_numbers[i][j + randomInteger(j, j + Math.sqrt(size))]
+                        new_numbers[i][randomInteger(j, j + Math.sqrt(size))] = value
+                    }
+                }
+            }*/
+
+            for (let i = 0; i < trs.length; i++) {
+                let tds = trs[i].getElementsByTagName('td')
+                for (let j = 0; j < tds.length; j++)
+                    tds[j].innerText = new_numbers[i][j]
+            }
+        }
+
+    </script>
+
+    <style>
+        table {
+            margin: 2em auto;
+            border-spacing: 0;
+        }
+
+        td {
+            height: 30px;
+            width: 30px;
+            border: 1px solid;
+            text-align: center;
+        }
+
+        p {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        Размер:
+        <input type="number" name="size" id="size">
+        <input type="button" value="Создать" onclick="create()">
+        <input type="button" value="Заполнить" onclick="game()">
+    </p>
+    <table>
+        <tbody></tbody>
+    </table>
+</body>
+
+</html>

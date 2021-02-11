@@ -40,19 +40,22 @@
                 if (isDigit(event.key))
                     chosen_cell.innerText = event.key
             }
-        }
+        }+
+        
         /*
-                line 1: 8 9 3  2 7 6  4 5 1
-                line 2: 2 7 6  4 5 1  8 9 3 (shift 3)
-                line 3: 4 5 1  8 9 3  2 7 6 (shift 3)
 
-                line 4: 5 1 8  9 3 2  7 6 4 (shift 1)
-                line 5: 9 3 2  7 6 4  5 1 8 (shift 3)
-                line 6: 7 6 4  5 1 8  9 3 2 (shift 3)
+        line 1: 8 9 3  2 7 6  4 5 1
+        line 2: 2 7 6  4 5 1  8 9 3 (shift 3)
+        line 3: 4 5 1  8 9 3  2 7 6 (shift 3)
 
-                line 7: 6 4 5  1 8 9  3 2 7 (shift 1)
-                line 8: 1 8 9  3 2 7  6 4 5 (shift 3)
-                line 9: 3 2 7  6 4 5  1 8 9 (shift 3)
+        line 4: 5 1 8  9 3 2  7 6 4 (shift 1)
+        line 5: 9 3 2  7 6 4  5 1 8 (shift 3)
+        line 6: 7 6 4  5 1 8  9 3 2 (shift 3)
+
+        line 7: 6 4 5  1 8 9  3 2 7 (shift 1)
+        line 8: 1 8 9  3 2 7  6 4 5 (shift 3)
+        line 9: 3 2 7  6 4 5  1 8 9 (shift 3)
+
         */
 
         function game() {
@@ -60,29 +63,21 @@
 
             let row_numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
             shuffle(row_numbers)
-            numbers.push(row_numbers)
-            numbers.push([row_numbers[3], row_numbers[4], row_numbers[5], row_numbers[6], row_numbers[7], row_numbers[8], row_numbers[0], row_numbers[1], row_numbers[2]])
-            numbers.push([row_numbers[6], row_numbers[7], row_numbers[8], row_numbers[0], row_numbers[1], row_numbers[2], row_numbers[3], row_numbers[4], row_numbers[5]])
-            
-            row_numbers = [row_numbers[7], row_numbers[8], row_numbers[0], row_numbers[1], row_numbers[2], row_numbers[3], row_numbers[4], row_numbers[5], row_numbers[6]]
-            numbers.push(row_numbers)
-            numbers.push([row_numbers[3], row_numbers[4], row_numbers[5], row_numbers[6], row_numbers[7], row_numbers[8], row_numbers[0], row_numbers[1], row_numbers[2]])
-            numbers.push([row_numbers[6], row_numbers[7], row_numbers[8], row_numbers[0], row_numbers[1], row_numbers[2], row_numbers[3], row_numbers[4], row_numbers[5]])
 
-            row_numbers = [row_numbers[7], row_numbers[8], row_numbers[0], row_numbers[1], row_numbers[2], row_numbers[3], row_numbers[4], row_numbers[5], row_numbers[6]]
-            numbers.push(row_numbers)
-            numbers.push([row_numbers[3], row_numbers[4], row_numbers[5], row_numbers[6], row_numbers[7], row_numbers[8], row_numbers[0], row_numbers[1], row_numbers[2]])
-            numbers.push([row_numbers[6], row_numbers[7], row_numbers[8], row_numbers[0], row_numbers[1], row_numbers[2], row_numbers[3], row_numbers[4], row_numbers[5]])
-            
+            for (let i = 0; i < 3; i++) {
+                row_numbers = [row_numbers[7], row_numbers[8], row_numbers[0], row_numbers[1], row_numbers[2], row_numbers[3], row_numbers[4], row_numbers[5], row_numbers[6]]
+                numbers.push(row_numbers)
+                numbers.push([row_numbers[3], row_numbers[4], row_numbers[5], row_numbers[6], row_numbers[7], row_numbers[8], row_numbers[0], row_numbers[1], row_numbers[2]])
+                numbers.push([row_numbers[6], row_numbers[7], row_numbers[8], row_numbers[0], row_numbers[1], row_numbers[2], row_numbers[3], row_numbers[4], row_numbers[5]])
+            }
+
             let trs = document.getElementsByTagName('tr')
             let new_numbers = []
 
-            for (let i = 1; i <= numbers.length; i++) {
-                if (i % 3 == 0) {
+            for (let i = 1; i <= numbers.length; i++)
+                if (i % 3 == 0)
                     for (shuffled_array of shuffle(numbers.slice(i-3, i)))
                         new_numbers.push(shuffled_array)
-                }
-            }
 
             for (let i = 0; i < trs.length; i++) {
                 let tds = trs[i].getElementsByTagName('td')
@@ -90,7 +85,6 @@
                     tds[j].innerText = new_numbers[i][j]
             } 
 
-            alert(new_numbers)
         }
     </script>
 
