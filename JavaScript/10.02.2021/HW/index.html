@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <title>Web Page</title>
+
+  <head>
+    <script type="text/javascript">
+      onload = function () {
+        Array.prototype.forEach.call(
+          document.getElementsByTagName("a"),
+          function (item) {
+            let handler = function (event) {
+              let href = event.target;
+              href.innerHTML = `${href.innerHTML} (${href.href})`;
+              href.removeEventListener("mouseover", handler, false);
+            };
+            item.addEventListener("mouseover", handler);
+          }
+        );
+      };
+    </script>
+  </head>
+
+  <body>
+    <p>
+      <a href="test">Test</a><br />
+      <a href="test">Test</a><br />
+      <a href="test">Test</a><br />
+      <a href="test">Test</a><br />
+      <a href="test">Test</a><br />
+    </p>
+  </body>
+</html>
+
