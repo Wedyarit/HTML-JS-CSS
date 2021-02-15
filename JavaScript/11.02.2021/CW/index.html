@@ -1,144 +1,163 @@
 <!DOCTYPE html>
 <html>
-  <title>Web Page</title>
+<title>Web Page</title>
 
-  <head>
-    <script type="text/javascript">
-      let size;
+<head>
+  <script type="text/javascript">
+    let size;
+    let size_sqrt;
 
-      function swap(x, y) {
-        var t = x;
-        x = y;
-        y = t;
-        return [x, y];
+    function swap(x, y) {
+      var t = x;
+      x = y;
+      y = t;
+      return [x, y];
+    }
+
+    function isDigit(symbol) {
+      return symbol >= '0' && symbol <= '9'
+    }
+
+    function getShiftedArray(array, n) {
+      var i = array.length - n;
+      var front = array.slice(0, i);
+      var back = array.slice(i);
+      return back.concat(front);
+    }
+
+    function shuffle(a) {
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function randomInteger(min, max) {
+      let rand = min - 0.5 + Math.random() * (max - min + 1);
+
+      return Math.round(rand);
+    }
+
+    onload = function () {
+      let table = document.body.getElementsByTagName('table')[0]
+      let chosen_cell
+
+      table.onclick = function (event) {
+        chosen_cell = event.target
+        if (chosen_cell.tagName != 'TD') return
+        let previous_cell = document.body.getElementsByClassName('cell-highlighted')[0]
+        if (previous_cell != undefined)
+          previous_cell.setAttribute('class', '')
+        chosen_cell.setAttribute('class', 'cell-highlighted')
       }
 
-      function getShiftedArray(array, n) {
-        var i = array.length - n;
-        var front = array.slice(0, i);
-        var back = array.slice(i);
-        return back.concat(front);
+      document.onkeypress = function (event) {
+        if (isDigit(event.key) && chosen_cell !== undefined)
+          chosen_cell.innerText = event.key
+      }
+    };
+
+    function create() {
+      size = parseInt(document.getElementById("size").value);
+      size_sqrt = Math.sqrt(size);
+
+      if (!Number.isInteger(size_sqrt)) {
+        alert("Некорректный размер");
+        return;
       }
 
-      function shuffle(a) {
-        for (let i = a.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [a[i], a[j]] = [a[j], a[i]];
+      var tbody = document.getElementsByTagName("tbody")[0];
+      while (tbody.firstChild) tbody.removeChild(tbody.lastChild);
+
+      for (let i = 0; i < size; i++) {
+        let tr = document.createElement("tr");
+        for (let j = 0; j < size; j++) {
+          let td = document.createElement("td");
+          if ((i + 1) % size_sqrt == 0) td.style.borderBottom = "3px solid";
+          else if (i % size_sqrt == 0) td.style.borderTop = "3px solid";
+          if ((j + 1) % size_sqrt == 0) td.style.borderRight = "3px solid";
+          else if (j % size_sqrt == 0) td.style.borderLeft = "3px solid";
+          tr.appendChild(td);
         }
-        return a;
+        tbody.appendChild(tr);
+      }
+    }
+
+    function game() {
+      let numbers = [];
+      let new_numbers = [];
+      let row_numbers = [];
+
+      for (let i = 1; i <= size; i++) row_numbers.push(i);
+      shuffle(row_numbers);
+
+      for (let i = 0; i < size_sqrt; i++) {
+        row_numbers = getShiftedArray(row_numbers, size_sqrt - 1);
+        numbers.push(row_numbers);
+        for (let j = 1; j < size_sqrt; j++)
+          numbers.push(getShiftedArray(row_numbers, j * size_sqrt));
       }
 
-      function randomInteger(min, max) {
-        let rand = min - 0.5 + Math.random() * (max - min + 1);
+      for (let i = 0; i < numbers.length; i += size_sqrt)
+        for (shuffled_array of shuffle(numbers.slice(i, i + size_sqrt)))
+          new_numbers.push(shuffled_array);
 
-        return Math.round(rand);
+      numbers.length = 0;
+      for (let i = 0; i < new_numbers.length; i++) {
+        var column = [];
+        for (let j = 0; j < new_numbers.length; j++)
+          column.push(new_numbers[j][i]);
+        numbers.push(column);
       }
 
-      onload = function () {
-        let table = document.body.getElementsByTagName("table")[0];
+      new_numbers.length = 0;
+      for (let i = 0; i < numbers.length; i += size_sqrt)
+        for (shuffled_array of shuffle(numbers.slice(i, i + size_sqrt)))
+          new_numbers.push(shuffled_array);
 
-        table.onclick = function (event) {
-          chosen_cell = event.target;
-          if (chosen_cell.tagName != "TD") return;
-          chosen_cell.innerHTML = randomInteger(1, size);
-        };
-      };
-
-      function create() {
-        size = parseInt(document.getElementById("size").value);
-        let sqrt_size = Math.sqrt(size);
-
-        if (!Number.isInteger(sqrt_size)) {
-          alert("Некорректный размер");
-          return;
-        }
-
-        var tbody = document.getElementsByTagName("tbody")[0];
-        while (tbody.firstChild) tbody.removeChild(tbody.lastChild);
-
-        for (let i = 0; i < size; i++) {
-          let tr = document.createElement("tr");
-          for (let j = 0; j < size; j++) {
-            let td = document.createElement("td");
-            if ((i + 1) % sqrt_size == 0) td.style.borderBottom = "3px solid";
-            else if (i % sqrt_size == 0) td.style.borderTop = "3px solid";
-            if ((j + 1) % sqrt_size == 0) td.style.borderRight = "3px solid";
-            else if (j % sqrt_size == 0) td.style.borderLeft = "3px solid";
-            tr.appendChild(td);
-          }
-          tbody.appendChild(tr);
-        }
+      let trs = document.getElementsByTagName("tr");
+      for (let i = 0; i < trs.length; i++) {
+        let tds = trs[i].getElementsByTagName("td");
+        for (let j = 0; j < tds.length; j++)
+          tds[j].innerText = new_numbers[i][j];
       }
+    }
+  </script>
 
-      function game() {
-        let numbers = [];
-        let new_numbers = [];
-        let row_numbers = [];
+  <style>
+    table {
+      margin: 2em auto;
+      border-spacing: 0;
+    }
 
-        for (let i = 1; i <= size; i++) row_numbers.push(i);
-        shuffle(row_numbers);
+    td {
+      height: 30px;
+      width: 30px;
+      border: 1px solid;
+      text-align: center;
+    }
 
-        for (let i = 0; i < Math.sqrt(size); i++) {
-          row_numbers = getShiftedArray(row_numbers, Math.sqrt(size) - 1);
-          numbers.push(row_numbers);
-          for (let j = 1; j < Math.sqrt(size); j++)
-            numbers.push(getShiftedArray(row_numbers, j * Math.sqrt(size)));
-        }
+    p {
+      text-align: center;
+    }
 
-        for (let i = 0; i < numbers.length; i += Math.sqrt(size))
-          for (shuffled_array of shuffle(numbers.slice(i, i + Math.sqrt(size))))
-            new_numbers.push(shuffled_array);
+    .cell-highlighted {
+      background-color: #add8e6;
+    }
+  </style>
+</head>
 
-        numbers.length = 0;
-        for (let i = 0; i < new_numbers.length; i++) {
-          var column = [];
-          for (let j = 0; j < new_numbers.length; j++)
-            column.push(new_numbers[j][i]);
-          numbers.push(column);
-        }
+<body>
+  <p>
+    Размер:
+    <input type="number" name="size" id="size" />
+    <input type="button" value="Создать" onclick="create()" />
+    <input type="button" value="Заполнить" onclick="game()" />
+  </p>
+  <table>
+    <tbody></tbody>
+  </table>
+</body>
 
-        new_numbers.length = 0;
-        for (let i = 0; i < numbers.length; i += Math.sqrt(size))
-          for (shuffled_array of shuffle(numbers.slice(i, i + Math.sqrt(size))))
-            new_numbers.push(shuffled_array);
-
-        let trs = document.getElementsByTagName("tr");
-        for (let i = 0; i < trs.length; i++) {
-          let tds = trs[i].getElementsByTagName("td");
-          for (let j = 0; j < tds.length; j++)
-            tds[j].innerText = new_numbers[i][j];
-        }
-      }
-    </script>
-
-    <style>
-      table {
-        margin: 2em auto;
-        border-spacing: 0;
-      }
-
-      td {
-        height: 30px;
-        width: 30px;
-        border: 1px solid;
-        text-align: center;
-      }
-
-      p {
-        text-align: center;
-      }
-    </style>
-  </head>
-
-  <body>
-    <p>
-      Размер:
-      <input type="number" name="size" id="size" />
-      <input type="button" value="Создать" onclick="create()" />
-      <input type="button" value="Заполнить" onclick="game()" />
-    </p>
-    <table>
-      <tbody></tbody>
-    </table>
-  </body>
 </html>
