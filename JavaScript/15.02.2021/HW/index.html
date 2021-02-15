@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <title>Web Page</title>
+
+  <head>
+    <script type="text/javascript">
+      onload = function () {
+        document.getElementsByTagName("a")[1].onclick = function (event) {
+          var x = 10;
+          setInterval(function () {
+            x += 1;
+            document.querySelector(".play").style.left = x + "px";
+          }, 20);
+        };
+      };
+    </script>
+
+    <style>
+      a {
+        color: #369;
+        font: 1em Arial, sans-serif;
+      }
+      .play {
+        width: 100px;
+        height: 100px;
+        background-color: #369;
+        border-radius: 100px;
+        position: fixed;
+        top: 100px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Задачи по <a href="http://htmllab.ru">JavaScript</a></h1>
+    <a href="#">Поехали!</a>
+    <div class="play"></div>
+  </body>
+</html>
