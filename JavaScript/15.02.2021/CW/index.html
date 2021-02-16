@@ -182,10 +182,10 @@
       size_sqrt = Math.sqrt(size);
       sudoku.length = 0
 
-      /*if (!Number.isInteger(size_sqrt)) {
+      if (!Number.isInteger(size_sqrt)) {
         alert("Некорректный размер");
         return false;
-      }*/
+      }
 
       var tbody = document.getElementsByTagName("tbody")[0];
       while (tbody.firstChild) tbody.removeChild(tbody.lastChild);
