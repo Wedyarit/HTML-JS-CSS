@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<title>Web Page</title>
+
+<head>
+</head>
+
+<script>
+
+  function start() {
+    // Task 1
+    document.getElementById('task1-res').innerHTML = document.getElementById('task1').value.match(/a.b/g)
+
+    // Task 2
+    document.getElementById('task2-res').innerHTML = document.getElementById('task2').value.match(/a.{2}a/g)
+
+    // Task 3
+    document.getElementById('task3-res').innerHTML = document.getElementById('task3').value.match(/ab+a/g)
+
+    // Task 4
+    document.getElementById('task4-res').innerHTML = document.getElementById('task4').value.match(/ab*a/g)
+
+    // Task 5
+    document.getElementById('task5-res').innerHTML = document.getElementById('task5').value.match(/a\.a/g)
+
+    // Task 6
+    document.getElementById('task6-res').innerHTML = document.getElementById('task6').value.match(/2\++3/g)
+
+    // Task 7
+    document.getElementById('task7-res').innerHTML = document.getElementById('task7').value.replace(/a.a/g, '!')
+
+    // Task 9
+    document.getElementById('task9-res').innerHTML = document.getElementById('task9').value.match(/ab{2,4}a/g)
+
+    // Task 10
+    document.getElementById('task10-res').innerHTML = document.getElementById('task10').value.match(/a\da/g)
+
+    // Task 11
+    document.getElementById('task11-res').innerHTML = document.getElementById('task11').value.match(/a[bex]a/g)
+
+    // Task 12
+    document.getElementById('task12-res').innerHTML = document.getElementById('task12').value.match(/a[a-z]+a/g)
+  }
+</script>
+
+<body>
+  <form action="">
+    <h3>Задание #1</h3>
+    <input type="text" id="task1" value="ahb acb aeb aeeb adcb axeb">
+    <p id="task1-res"></p>
+  </form>
+
+  <form action="">
+    <h3>Задание #2</h3>
+    <input type="text" id="task2" value="aba aca aea abba adca abea">
+    <p id="task2-res"></p>
+  </form>
+
+  <form action="">
+    <h3>Задание #3</h3>
+    <input type="text" id="task3" value="aa aba abba abbba abca abea">
+    <p id="task3-res"></p>
+  </form>
+
+  <form action="">
+    <h3>Задание #4</h3>
+    <input type="text" id="task4" value="aa aba abba abbba abca abea">
+    <p id="task4-res"></p>
+  </form>
+
+  <form action="">
+    <h3>Задание #5</h3>
+    <input type="text" id="task5" value="a.a ava aea">
+    <p id="task5-res"></p>
+  </form>
+
+  <form action="">
+    <h3>Задание #6</h3>
+    <input type="text" id="task6" value="12 2+3 2++3 2+++3 345 567">
+    <p id="task6-res"></p>
+  </form>
+
+  <form action="">
+    <h3>Задание #7</h3>
+    <input type="text" id="task7" value="ava accca azzza wwwa">
+    <p id="task7-res"></p>
+  </form>
+
+  <form action="">
+    <h3>Задание #8</h3>
+    <input type="text" id="task8" pattern="\w{5,}" required>
+  </form>
+
+  <form action="">
+    <h3>Задание #9</h3>
+    <input type="text" id="task9" value="aa aba abba abbba abbbba abbbbba">
+    <p id="task9-res"></p>
+  </form>
+
+  <form action="">
+    <h3>Задание #10</h3>
+    <input type="text" id="task10" value="a1a a2a 3a a4a a5a aba aca">
+    <p id="task10-res"></p>
+  </form>
+
+  <form action="">
+    <h3>Задание #11</h3>
+    <input type="text" id="task11" value="aba aea aca aza axa">
+    <p id="task11-res"></p>
+  </form>
+
+  <form action="">
+    <h3>Задание #12</h3>
+    <input type="text" id="task12" value="aAXa aeffa Agha aza ax23a a3sSa">
+    <p id="task12-res"></p>
+  </form>
+
+  <input type="button" value="Start" onclick="start()">
+</body>
+
+</html>

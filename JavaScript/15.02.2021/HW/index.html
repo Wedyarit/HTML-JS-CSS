@@ -1,39 +1,199 @@
 <!DOCTYPE html>
-<html>
-  <title>Web Page</title>
 
-  <head>
-    <script type="text/javascript">
-      onload = function () {
-        document.getElementsByTagName("a")[1].onclick = function (event) {
-          var x = 10;
-          setInterval(function () {
-            x += 1;
-            document.querySelector(".play").style.left = x + "px";
-          }, 20);
-        };
-      };
-    </script>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
-    <style>
-      a {
-        color: #369;
-        font: 1em Arial, sans-serif;
-      }
-      .play {
-        width: 100px;
-        height: 100px;
-        background-color: #369;
-        border-radius: 100px;
-        position: fixed;
-        top: 100px;
-      }
+<head>
+    <meta charset="utf-8" />
+    <title>Привет, мир!</title>
+    <style type="text/css">
+        table {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 14px;
+            background: white;
+            max-width: 70%;
+            width: 70%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            font-weight: normal;
+            color: #039;
+            border-bottom: 2px solid #6678b1;
+            padding: 10px 8px;
+        }
+
+        td {
+            color: #669;
+            padding: 9px 8px;
+            transition: .3s linear;
+        }
+
+        tr:hover td {
+            color: #6699ff;
+        }
+
+        td {
+            border-bottom: 1px solid #ccc;
+            color: #669;
+            padding: 9px 8px;
+            transition: .3s linear;
+        }
+
+        th {
+            font-weight: normal;
+            color: #039;
+            padding: 10px 15px;
+        }
+
+        td {
+            color: #669;
+            border-top: 1px solid #e8edff;
+            padding: 10px 15px;
+        }
+
+        tr:hover td {
+            background: #e8edff;
+        }
+
+        input[type=text],
+        input[type=date],
+        input[type=number] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        input[type=button] {
+            width: 100%;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .formheaders {
+            font-size: 16px;
+            font-weight: 300;
+            color: #669;
+        }
     </style>
-  </head>
+    <script type="text/javascript">
+        class Obeder {
+            _arr = [];
+            Add(row) { }
 
-  <body>
-    <h1>Задачи по <a href="http://htmllab.ru">JavaScript</a></h1>
-    <a href="#">Поехали!</a>
-    <div class="play"></div>
-  </body>
+        }
+
+        var obeder = new Obeder();
+
+        // Глобальный счетчик
+        var idcounter = 0;
+
+        // Функция создает строку таблицы
+        function createTableRow(objRow) {
+            let nodeRow = document.createElement('TR');
+            let node = document.createElement('TD');
+            node.innerText = objRow.name;
+            nodeRow.appendChild(node, nodeRow);
+
+            node = document.createElement('TD');
+            node.innerText = objRow.date;
+            nodeRow.appendChild(node, nodeRow);
+
+            node = document.createElement('TD');
+            node.innerText = objRow.sum;
+            nodeRow.appendChild(node, nodeRow);
+
+            node = document.createElement('TD');
+            node.innerText = objRow.id;
+            nodeRow.appendChild(node, nodeRow);
+
+            return nodeRow;
+        }
+
+        // Функция создает строку идентификации
+        function createId() {
+            const idSize = 19;
+            let str = (++idcounter).toString(16);
+            let answer = "";
+            let index = 0;
+            for (let i = 1; i < idSize + 1; i++) {
+                if (Number.isInteger(i / 5)) {
+                    answer += '-';
+                } else {
+                    if (i < idSize - str.length + 1) {
+                        answer += '0';
+                    } else {
+                        answer += str[index++];
+                    }
+                }
+            }
+            return answer;
+        }
+    </script>
+</head>
+
+<body>
+    <form id="formelement">
+        <div class="formheaders">Имя: </div><input id="nameelement" type="text" />
+        <div class="formheaders">Дата: </div><input id="dateelement" type="date" />
+        <div class="formheaders">Сумма: </div><input id="numberelement" type="number" />
+        <input id="idelement" type="hidden">
+        <p>
+            <input id="buttonadd" type="button" value="Добавить" />
+        </p>
+    </form>
+    <br />
+    <table id="maintable">
+        <tr>
+            <th>Ф. И. О.</th>
+            <th>Дата</th>
+            <th>Сумма</th>
+            <th>Идентификатор</th>
+        </tr>
+        <!-- 	Строка для тестирования
+		<tr>
+			<td>Иванов Иван</td>
+			<td>11.11.1111</td>
+			<td>0</td>
+			<td>0000-0000-0000-0000</td>
+		</tr> -->
+    </table>
+    <!-- Создать форму для запроса периода вот здесь.
+		<input id="buttoncalc" type="button" value="Рассчитать" />
+	-->
+    <br />
+    <div>
+        <!-- Выводить результат вот здесь -->
+    </div>
+</body>
+<script type="text/javascript">
+    // Устанавливаем обработчик события нажатия
+    buttonadd.onclick = function () {
+        if (nameelement.value == "" | dateelement.value == "" | numberelement.value == 0) {
+            // Блокируем событие при не заполненных полях
+            console.log("no data");
+            return null;
+        } else {
+            // Создаем объект с данными.
+            let row = {};
+            row.name = nameelement.value;
+            row.date = dateelement.value;
+            row.sum = numberelement.value;
+            row.id = createId();
+            // Устанавливаем значене для скрытого элемента формы
+            idelement.value = row.id;
+            console.log(idelement);
+            // Добавляем новую строку в таблицу
+            let table = document.getElementById('maintable');
+            table.appendChild(createTableRow(row));
+        }
+    }
+</script>
+
 </html>
