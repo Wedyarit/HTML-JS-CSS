@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<title>Cinema</title>
+
+<head>
+</head>
+
+<script>
+  class Session {
+    constructor() {
+      this.halls = [];
+    }
+
+    addHall(hall) { this.halls.push(hall) }
+  }
+
+  const Status = { "empty": 1, "taken": 2 }
+  Object.freeze(Status)
+
+  class Hall {
+    constructor(rows, columns, number) {
+      this.number = number;
+      this.rows = rows;
+      this.columns = columns;
+      this.cells = [];
+
+      for (let i = 0; i < rows * columns; i++)
+        this.cells.push(new Cell(Status.empty))
+    }
+
+    setCell(index, status) {
+      this.cells[index] = new Cell(status)
+      this.build();
+    }
+
+    build() {
+      let seatplan = document.getElementsByClassName('seatplan')[0]
+
+      while (seatplan.firstChild) {
+        seatplan.removeChild(seatplan.lastChild);
+      }
+
+      let hall_name = document.createElement('h2')
+      hall_name.innerHTML = `Зал #${this.number}`
+      seatplan.appendChild(hall_name)
+
+      for (let i = 0; i < this.rows; i++) {
+        for (let j = 0; j < this.columns; j++) {
+          let outline_seat = document.createElement('div');
+          let inline_seat = document.createElement('div');
+          /*if (this.cells[i * this.rows + j * this.columns].status == Status.empty) {
+            outline_seat.className = 'outer-seat'
+            inline_seat.className = 'inner-seat'
+          } else {
+            outline_seat.className = 'outer-seat taken'
+            inline_seat.className = 'inner-seat taken'
+          }*/
+
+          outline_seat.className = 'outer-seat'
+          inline_seat.className = 'inner-seat'
+          outline_seat.className = 'outer-seat'
+          outline_seat.id = 'div-inline'
+          inline_seat.className = 'inner-seat'
+          outline_seat.appendChild(inline_seat)
+          seatplan.appendChild(outline_seat)
+        }
+        let clear_both = document.createElement('br')
+        clear_both.className = 'clearBoth'
+        seatplan.appendChild(clear_both)
+      }
+    }
+  }
+
+  class Cell {
+    constructor(status) {
+      this.status = status;
+    }
+  }
+
+
+</script>
+
+<script>
+
+  let sessions = []
+
+
+  onload = function () {
+
+    let session1 = new Session()
+    session1.addHall(new Hall(8, 8, 1))
+    session1.addHall(new Hall(5, 5, 2))
+    session1.addHall(new Hall(10, 10, 3))
+    session1.addHall(new Hall(6, 6, 4))
+    session1.addHall(new Hall(8, 8, 5))
+    session1.addHall(new Hall(8, 8, 6))
+    sessions.push(session1)
+
+    let session2 = new Session()
+    session2.addHall(new Hall(16, 16, 7))
+    session2.addHall(new Hall(5, 5, 8))
+    session2.addHall(new Hall(3, 3, 9))
+    session2.addHall(new Hall(7, 7, 10))
+    session2.addHall(new Hall(16, 14, 11))
+    session2.addHall(new Hall(14, 16, 12))
+    sessions.push(session2)
+
+    let session3 = new Session()
+    session3.addHall(new Hall(8, 8, 13))
+    session3.addHall(new Hall(5, 5, 14))
+    session3.addHall(new Hall(9, 9, 15))
+    session3.addHall(new Hall(10, 10, 16))
+    session3.addHall(new Hall(12, 12, 17))
+    session3.addHall(new Hall(8, 8, 18))
+    sessions.push(session3)
+
+    let navigations = document.getElementsByClassName("navigation");
+
+    Array.prototype.forEach.call(navigations, navigation => {
+      navigation.onclick = function (event) {
+        let active = event.target.parentElement.getElementsByClassName('active')[0];
+        let orderedToBeActive = event.target;
+        if (active == undefined) return;
+        active.setAttribute('class', '');
+        orderedToBeActive.className = "active";
+
+        let timeActive = document.getElementsByClassName('active')[1];
+        let dateActive = document.getElementsByClassName('active')[0];
+
+        sessions[dateActive.id].halls[timeActive.id].build();
+      }
+    });
+
+    let seatplan = document.getElementsByClassName("seatplan")[0];
+    seatplan.onclick = function (event) {
+      let seatplace = event.target
+
+      switch (seatplace.className) {
+        case 'inner-seat':
+          seatplace.className += ' chosen'
+          seatplace.parentElement.className += ' chosen'
+          break;
+        case 'outer-seat':
+          seatplace.className += ' chosen'
+          seatplace.firstElementChild.className += ' chosen'
+          break
+        case 'outer-seat chosen':
+          seatplace.className = 'outer-seat'
+          seatplace.firstElementChild.className = 'inner-seat'
+          break;
+        case 'inner-seat chosen':
+          seatplace.className = 'inner-seat'
+          seatplace.parentElement.className = 'outer-seat'
+          break;
+      }
+    }
+  }
+</script>
+
+<style>
+  .navigation {
+    background-color: #333;
+    overflow: hidden;
+  }
+
+  .navigation a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+  .active {
+    background-color: #3366CC;
+    color: white;
+  }
+
+  .navigation a:hover {
+    background-color: #555;
+    color: rgb(162, 171, 219);
+  }
+
+  div {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .outer-seat {
+    width: 40px;
+    height: 40px;
+    border-radius: 4.5px;
+    border: 3.5px solid #D8D8D8;
+    background: white;
+    position: relative;
+    margin: 2px;
+  }
+
+  .inner-seat {
+    width: 35px;
+    height: 35px;
+    border-radius: 2px;
+    top: 50%;
+    left: 50%;
+    margin: -17.5px 0px 0px -17.5px;
+    background: #D8D8D8;
+    position: absolute;
+  }
+
+  .inner-seat.taken {
+    background: #d8b8b8;
+  }
+
+  .outer-seat.taken {
+    border-color: #d8b8b8;
+  }
+
+  #div-inline {
+    float: left;
+  }
+
+  .outer-seat:hover,
+  .outer-seat.chosen {
+    border-color: #3366CC;
+  }
+
+  #div-inline:hover .inner-seat,
+  .inner-seat.chosen {
+    background: #3366CC;
+  }
+
+  .clearBoth {
+    clear: both;
+  }
+
+  .selected-innerColor {
+    background-color: #3366CC;
+  }
+
+  .selected-outerColor {
+    border-color: #3366CC;
+  }
+
+  .button {
+    background-color: #3366CC;
+    border-radius: 5px;
+    border-color: transparent;
+    color: white;
+    padding: 10px 22px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+
+  .button:hover {
+    background-color: rgb(78, 121, 240);
+  }
+</style>
+
+<body>
+  <div class="options">
+    <div class="navigation" id="navigation-Session">
+      <a href="#" class="active" id=0>17.02.2021</a>
+      <a href="#" id=1>18.02.2021</a>
+      <a href="#" id=2>17.02.2021</a>
+    </div>
+
+    <br>
+
+    <div class="navigation" id="navigation-time">
+      <a href="#" class="active" id=0>10:00</a>
+      <a href="#" id=1>12:00</a>
+      <a href="#" id=2>14:00</a>
+      <a href="#" id=3>16:00</a>
+      <a href="#" id=4>18:00</a>
+      <a href="#" id=5>20:00</a>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="seatplan">
+  </div>
+  <br>
+  <input type="button" value="Забронировать" class="button">
+  </div>
+</body>
+
+</html>
