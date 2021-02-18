@@ -23,6 +23,7 @@
       this.rows = rows;
       this.columns = columns;
       this.cells = [];
+      this.disabled = false;
 
       for (let i = 0; i < rows * columns; i++)
         this.cells.push(new Cell(Status.empty))
@@ -30,7 +31,6 @@
 
     setCell(index, status) {
       this.cells[index] = new Cell(status)
-      this.build();
     }
 
     build() {
@@ -40,27 +40,27 @@
         seatplan.removeChild(seatplan.lastChild);
       }
 
-      let hall_name = document.createElement('h2')
-      hall_name.innerHTML = `Зал #${this.number}`
-      seatplan.appendChild(hall_name)
+      let hall = document.getElementsByClassName('hall')[0]
+      document.getElementById('hall-id').innerHTML = `Зал #${this.number}`
 
       for (let i = 0; i < this.rows; i++) {
         for (let j = 0; j < this.columns; j++) {
           let outline_seat = document.createElement('div');
           let inline_seat = document.createElement('div');
-          /*if (this.cells[i * this.rows + j * this.columns].status == Status.empty) {
+          if (this.cells[this.rows * i + j].status == Status.empty) {
             outline_seat.className = 'outer-seat'
             inline_seat.className = 'inner-seat'
-          } else {
+          } else if (this.cells[this.rows * i + j].status == Status.taken) {
             outline_seat.className = 'outer-seat taken'
             inline_seat.className = 'inner-seat taken'
-          }*/
+          }
 
-          outline_seat.className = 'outer-seat'
-          inline_seat.className = 'inner-seat'
-          outline_seat.className = 'outer-seat'
+          if (this.disabled) {
+            outline_seat.className += ' disabled'
+            inline_seat.className += ' disabled'
+          }
+
           outline_seat.id = 'div-inline'
-          inline_seat.className = 'inner-seat'
           outline_seat.appendChild(inline_seat)
           seatplan.appendChild(outline_seat)
         }
@@ -68,6 +68,11 @@
         clear_both.className = 'clearBoth'
         seatplan.appendChild(clear_both)
       }
+
+      let seatPlanWrapper = document.createElement('div')
+      seatPlanWrapper.classList.add('seatPlanWrapper')
+      seatPlanWrapper.appendChild(seatplan)
+      hall.appendChild(seatPlanWrapper)
     }
   }
 
@@ -81,43 +86,65 @@
 </script>
 
 <script>
+  let chosen_places = []
+  let activeHall
 
+  function randomInteger(min, max) {
+    let rand = min - 0.5 + Math.random() * (max - min + 1);
+
+    return Math.round(rand);
+  }
   let sessions = []
 
+  
+  function random_fill() {
+    for (let i = 0; i < 7; i++) {
+      let session = new Session()
+      for (let j = 1; j <= 6; j++) {
+        let random_size = randomInteger(4, 16)
+        let hall = new Hall(random_size, random_size, j + i * 7);
+        if (new Date().getDay() > i + 1) {  
+          hall.disabled = true
+          for (let g = 0; g < random_size ** 2; g++) {
+            if (randomInteger(0, 100) < 30) {
+              hall.setCell(g, Status.taken);
+            }
+          }
+        }
+        session.addHall(hall)
+      }
+      if (new Date().getDay() > i + 1)
+          localStorage.setItem(i, session)
+      sessions.push(session);
+    }
+  }
+
+  function fill() {
+    for (let i = 0; i < 7; i++) {
+      if (localStorage.getItem(i) != undefined) {
+        sessions.push(localStorage.getItem(i))
+        continue
+      } else {
+        let session = new Session()
+        for (let j = 1; j <= 6; j++) {
+          let random_size = randomInteger(4, 16)
+          let hall = new Hall(random_size, random_size, j + i * 7);
+          session.addHall(hall)
+        }
+        sessions.push(session);
+      }
+    }
+  }
 
   onload = function () {
-
-    let session1 = new Session()
-    session1.addHall(new Hall(8, 8, 1))
-    session1.addHall(new Hall(5, 5, 2))
-    session1.addHall(new Hall(10, 10, 3))
-    session1.addHall(new Hall(6, 6, 4))
-    session1.addHall(new Hall(8, 8, 5))
-    session1.addHall(new Hall(8, 8, 6))
-    sessions.push(session1)
-
-    let session2 = new Session()
-    session2.addHall(new Hall(16, 16, 7))
-    session2.addHall(new Hall(5, 5, 8))
-    session2.addHall(new Hall(3, 3, 9))
-    session2.addHall(new Hall(7, 7, 10))
-    session2.addHall(new Hall(16, 14, 11))
-    session2.addHall(new Hall(14, 16, 12))
-    sessions.push(session2)
-
-    let session3 = new Session()
-    session3.addHall(new Hall(8, 8, 13))
-    session3.addHall(new Hall(5, 5, 14))
-    session3.addHall(new Hall(9, 9, 15))
-    session3.addHall(new Hall(10, 10, 16))
-    session3.addHall(new Hall(12, 12, 17))
-    session3.addHall(new Hall(8, 8, 18))
-    sessions.push(session3)
+    fill();
 
     let navigations = document.getElementsByClassName("navigation");
 
     Array.prototype.forEach.call(navigations, navigation => {
       navigation.onclick = function (event) {
+        chosen_places.length = 0;
+
         let active = event.target.parentElement.getElementsByClassName('active')[0];
         let orderedToBeActive = event.target;
         if (active == undefined) return;
@@ -127,7 +154,8 @@
         let timeActive = document.getElementsByClassName('active')[1];
         let dateActive = document.getElementsByClassName('active')[0];
 
-        sessions[dateActive.id].halls[timeActive.id].build();
+        activeHall = sessions[dateActive.id].halls[timeActive.id]
+        activeHall.build();
       }
     });
 
@@ -137,30 +165,45 @@
 
       switch (seatplace.className) {
         case 'inner-seat':
+          chosen_places.push(seatplace.parentElement)
           seatplace.className += ' chosen'
           seatplace.parentElement.className += ' chosen'
           break;
         case 'outer-seat':
+          chosen_places.push(seatplace)
           seatplace.className += ' chosen'
           seatplace.firstElementChild.className += ' chosen'
           break
         case 'outer-seat chosen':
+          chosen_places.splice(chosen_places.indexOf(seatplace), 1)
           seatplace.className = 'outer-seat'
           seatplace.firstElementChild.className = 'inner-seat'
           break;
         case 'inner-seat chosen':
+          chosen_places.splice(chosen_places.indexOf(seatplace.parentElement), 1)
           seatplace.className = 'inner-seat'
           seatplace.parentElement.className = 'outer-seat'
           break;
       }
     }
   }
+
+  function reserve() {
+    let children = Array.prototype.slice.call(document.getElementsByClassName('seatplan')[0].children);
+    let places = children.filter(child => child.tagName == 'DIV')
+    chosen_places.forEach(chosen_place => activeHall.setCell(places.indexOf(chosen_place), Status.taken))
+    activeHall.build()
+    chosen_places.length = 0
+  }
 </script>
 
 <style>
   .navigation {
+    width: 100%;
     background-color: #333;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
   }
 
   .navigation a {
@@ -181,6 +224,7 @@
   .navigation a:hover {
     background-color: #555;
     color: rgb(162, 171, 219);
+    -webkit-transition: background 0.5s ease, color 0.3s ease;
   }
 
   div {
@@ -216,6 +260,10 @@
     border-color: #d8b8b8;
   }
 
+  .hall {
+    text-align: center;
+  }
+
   #div-inline {
     float: left;
   }
@@ -223,11 +271,19 @@
   .outer-seat:hover,
   .outer-seat.chosen {
     border-color: #3366CC;
+    -webkit-transition: background 0.5s ease, color 0.3s ease;
+  }
+
+  .seatPlanWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 
   #div-inline:hover .inner-seat,
   .inner-seat.chosen {
     background: #3366CC;
+    -webkit-transition: background 0.5s ease, color 0.3s ease;
   }
 
   .clearBoth {
@@ -254,17 +310,30 @@
     font-size: 16px;
   }
 
+  .button.disabled {
+    background-color: rgb(176, 197, 255);
+  }
+
+  .button.disabled:hover {
+    background-color: rgb(176, 197, 255);
+  }
+
   .button:hover {
     background-color: rgb(78, 121, 240);
+    -webkit-transition: background 0.5s ease, color 0.3s ease;
   }
 </style>
 
 <body>
   <div class="options">
     <div class="navigation" id="navigation-Session">
-      <a href="#" class="active" id=0>17.02.2021</a>
-      <a href="#" id=1>18.02.2021</a>
-      <a href="#" id=2>17.02.2021</a>
+      <a href="#" class="active" id=0>Понедельник</a>
+      <a href="#" id=1>Вторник</a>
+      <a href="#" id=2>Среда</a>
+      <a href="#" id=3>Четверг</a>
+      <a href="#" id=4>Пятница</a>
+      <a href="#" id=5>Суббота</a>
+      <a href="#" id=6>Воскресенье</a>
     </div>
 
     <br>
@@ -281,10 +350,17 @@
 
   <br>
 
-  <div class="seatplan">
+  <div class="hall">
+    <h2 id="hall-id"></h2>
+    <div class="seatplan">
+
+    </div>
+
+    <br>
   </div>
-  <br>
-  <input type="button" value="Забронировать" class="button">
+  <div style="text-align: center;">
+    <br>
+    <input type="button" onclick="reserve()" value="Забронировать" class="button">
   </div>
 </body>
 

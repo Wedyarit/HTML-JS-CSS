@@ -86,7 +86,15 @@
         class Obeder {
             _arr = [];
             Add(row) { }
+        }
 
+        class Row {
+            constructor(name, date, sum, id) {
+                this.name = name;
+                this.date = date;
+                this.sum = sum;
+                this.id = id;
+            }
         }
 
         var obeder = new Obeder();
@@ -181,11 +189,7 @@
             return null;
         } else {
             // Создаем объект с данными.
-            let row = {};
-            row.name = nameelement.value;
-            row.date = dateelement.value;
-            row.sum = numberelement.value;
-            row.id = createId();
+            let row = new Row(nameelement.value, dateelement.value, numberelement.value, createId());
             // Устанавливаем значене для скрытого элемента формы
             idelement.value = row.id;
             console.log(idelement);
