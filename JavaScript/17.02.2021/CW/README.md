@@ -1,5 +1,5 @@
-# Sudoku
-Implement the Sudoku website.
+# Cinema Hallplan
+Implement the Cinema Hallplan Reservation website.
 
 ## Contributing
 The work was done and prepared by [@Wedyarit (Vyacheslav)](https://github.com/Wedyarit).
