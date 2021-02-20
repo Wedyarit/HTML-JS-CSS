@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="">
+      <div class="tab">
+        <input placeholder="Имя" />
+      </div>
+
+      <div class="tab">
+        <input placeholder="Телефон" />
+      </div>
+
+      <div class="tab">
+        <input placeholder="Логин" />
+        <input placeholder="Пароль" type="password" />
+      </div>
+
+      <div>
+        <button type="button" onclick="nextTab(-1)">Назад</button>
+        <button type="button" onclick="nextTab(1)">Далее</button>
+      </div>
+
+      <div>
+        <p id="step">1</p>
+      </div>
+    </form>
+  </body>
+  <style>
+    .tab {
+      display: none;
+    }
+  </style>
+
+  <script>
+    let currentTab = 0;
+    displayTab(currentTab);
+
+    function displayTab(n) {
+      let tabs = document.getElementsByClassName("tab");
+      if (n == tabs.length) document.getElementsByTagName("form")[0].submit();
+      tabs[n].style.display = "block";
+    }
+
+    function nextTab(n) {
+      document.getElementsByClassName("tab")[currentTab].style.display = "none";
+      currentTab += n;
+      document.getElementById("step").innerHTML = currentTab + 1;
+
+      displayTab(currentTab);
+    }
+  </script>
+</html>
