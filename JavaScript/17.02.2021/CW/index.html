@@ -1,367 +1,375 @@
 <!DOCTYPE html>
 <html>
-<title>Cinema</title>
+  <title>Cinema</title>
 
-<head>
-</head>
+  <head> </head>
 
-<script>
-  class Session {
-    constructor() {
-      this.halls = [];
-    }
-
-    addHall(hall) { this.halls.push(hall) }
-  }
-
-  const Status = { "empty": 1, "taken": 2 }
-  Object.freeze(Status)
-
-  class Hall {
-    constructor(rows, columns, number) {
-      this.number = number;
-      this.rows = rows;
-      this.columns = columns;
-      this.cells = [];
-      this.disabled = false;
-
-      for (let i = 0; i < rows * columns; i++)
-        this.cells.push(new Cell(Status.empty))
-    }
-
-    setCell(index, status) {
-      this.cells[index] = new Cell(status)
-    }
-
-    build() {
-      let seatplan = document.getElementsByClassName('seatplan')[0]
-
-      while (seatplan.firstChild) {
-        seatplan.removeChild(seatplan.lastChild);
+  <script>
+    class Session {
+      constructor() {
+        this.halls = [];
       }
 
-      let hall = document.getElementsByClassName('hall')[0]
-      document.getElementById('hall-id').innerHTML = `Зал #${this.number}`
+      addHall(hall) {
+        this.halls.push(hall);
+      }
+    }
 
-      for (let i = 0; i < this.rows; i++) {
-        for (let j = 0; j < this.columns; j++) {
-          let outline_seat = document.createElement('div');
-          let inline_seat = document.createElement('div');
-          if (this.cells[this.rows * i + j].status == Status.empty) {
-            outline_seat.className = 'outer-seat'
-            inline_seat.className = 'inner-seat'
-          } else if (this.cells[this.rows * i + j].status == Status.taken) {
-            outline_seat.className = 'outer-seat taken'
-            inline_seat.className = 'inner-seat taken'
-          }
+    const Status = { empty: 1, taken: 2 };
+    Object.freeze(Status);
 
-          if (this.disabled) {
-            outline_seat.className += ' disabled'
-            inline_seat.className += ' disabled'
-          }
+    class Hall {
+      constructor(rows, columns, number) {
+        this.number = number;
+        this.rows = rows;
+        this.columns = columns;
+        this.cells = [];
+        this.disabled = false;
 
-          outline_seat.id = 'div-inline'
-          outline_seat.appendChild(inline_seat)
-          seatplan.appendChild(outline_seat)
+        for (let i = 0; i < rows * columns; i++)
+          this.cells.push(new Cell(Status.empty));
+      }
+
+      setCell(index, status) {
+        this.cells[index] = new Cell(status);
+      }
+
+      build() {
+        let seatplan = document.getElementsByClassName("seatplan")[0];
+
+        while (seatplan.firstChild) {
+          seatplan.removeChild(seatplan.lastChild);
         }
-        let clear_both = document.createElement('br')
-        clear_both.className = 'clearBoth'
-        seatplan.appendChild(clear_both)
+
+        let hall = document.getElementsByClassName("hall")[0];
+        document.getElementById("hall-id").innerHTML = `Зал #${this.number}`;
+
+        for (let i = 0; i < this.rows; i++) {
+          for (let j = 0; j < this.columns; j++) {
+            let outline_seat = document.createElement("div");
+            let inline_seat = document.createElement("div");
+            if (this.cells[this.rows * i + j].status == Status.empty) {
+              outline_seat.className = "outer-seat";
+              inline_seat.className = "inner-seat";
+            } else if (this.cells[this.rows * i + j].status == Status.taken) {
+              outline_seat.className = "outer-seat taken";
+              inline_seat.className = "inner-seat taken";
+            }
+
+            if (this.disabled) {
+              outline_seat.className += " disabled";
+              inline_seat.className += " disabled";
+            }
+
+            outline_seat.id = "div-inline";
+            outline_seat.appendChild(inline_seat);
+            seatplan.appendChild(outline_seat);
+          }
+          let clear_both = document.createElement("br");
+          clear_both.className = "clearBoth";
+          seatplan.appendChild(clear_both);
+        }
+
+        let seatPlanWrapper = document.createElement("div");
+        seatPlanWrapper.classList.add("seatPlanWrapper");
+        seatPlanWrapper.appendChild(seatplan);
+        hall.appendChild(seatPlanWrapper);
       }
-
-      let seatPlanWrapper = document.createElement('div')
-      seatPlanWrapper.classList.add('seatPlanWrapper')
-      seatPlanWrapper.appendChild(seatplan)
-      hall.appendChild(seatPlanWrapper)
     }
-  }
 
-  class Cell {
-    constructor(status) {
-      this.status = status;
+    class Cell {
+      constructor(status) {
+        this.status = status;
+      }
     }
-  }
+  </script>
 
+  <script>
+    let chosen_places = [];
+    let activeHall;
 
-</script>
+    function randomInteger(min, max) {
+      let rand = min - 0.5 + Math.random() * (max - min + 1);
 
-<script>
-  let chosen_places = []
-  let activeHall
+      return Math.round(rand);
+    }
+    let sessions = [];
 
-  function randomInteger(min, max) {
-    let rand = min - 0.5 + Math.random() * (max - min + 1);
-
-    return Math.round(rand);
-  }
-  let sessions = []
-
-  
-  function random_fill() {
-    for (let i = 0; i < 7; i++) {
-      let session = new Session()
-      for (let j = 1; j <= 6; j++) {
-        let random_size = randomInteger(4, 16)
-        let hall = new Hall(random_size, random_size, j + i * 7);
-        if (new Date().getDay() > i + 1) {  
-          hall.disabled = true
-          for (let g = 0; g < random_size ** 2; g++) {
-            if (randomInteger(0, 100) < 30) {
-              hall.setCell(g, Status.taken);
+    function random_fill() {
+      for (let i = 0; i < 7; i++) {
+        let session = new Session();
+        for (let j = 1; j <= 6; j++) {
+          let random_size = randomInteger(4, 16);
+          let hall = new Hall(random_size, random_size, j + i * 7);
+          if (new Date().getDay() > i + 1) {
+            hall.disabled = true;
+            for (let g = 0; g < random_size ** 2; g++) {
+              if (randomInteger(0, 100) < 30) {
+                hall.setCell(g, Status.taken);
+              }
             }
           }
+          session.addHall(hall);
         }
-        session.addHall(hall)
-      }
-      if (new Date().getDay() > i + 1)
-          localStorage.setItem(i, session)
-      sessions.push(session);
-    }
-  }
-
-  function fill() {
-    for (let i = 0; i < 7; i++) {
-      if (localStorage.getItem(i) != undefined) {
-        sessions.push(localStorage.getItem(i))
-        continue
-      } else {
-        let session = new Session()
-        for (let j = 1; j <= 6; j++) {
-          let random_size = randomInteger(4, 16)
-          let hall = new Hall(random_size, random_size, j + i * 7);
-          session.addHall(hall)
-        }
+        if (new Date().getDay() > i + 1) localStorage.setItem(i, session);
         sessions.push(session);
       }
     }
-  }
 
-  onload = function () {
-    fill();
-
-    let navigations = document.getElementsByClassName("navigation");
-
-    Array.prototype.forEach.call(navigations, navigation => {
-      navigation.onclick = function (event) {
-        chosen_places.length = 0;
-
-        let active = event.target.parentElement.getElementsByClassName('active')[0];
-        let orderedToBeActive = event.target;
-        if (active == undefined) return;
-        active.setAttribute('class', '');
-        orderedToBeActive.className = "active";
-
-        let timeActive = document.getElementsByClassName('active')[1];
-        let dateActive = document.getElementsByClassName('active')[0];
-
-        activeHall = sessions[dateActive.id].halls[timeActive.id]
-        activeHall.build();
-      }
-    });
-
-    let seatplan = document.getElementsByClassName("seatplan")[0];
-    seatplan.onclick = function (event) {
-      let seatplace = event.target
-
-      switch (seatplace.className) {
-        case 'inner-seat':
-          chosen_places.push(seatplace.parentElement)
-          seatplace.className += ' chosen'
-          seatplace.parentElement.className += ' chosen'
-          break;
-        case 'outer-seat':
-          chosen_places.push(seatplace)
-          seatplace.className += ' chosen'
-          seatplace.firstElementChild.className += ' chosen'
-          break
-        case 'outer-seat chosen':
-          chosen_places.splice(chosen_places.indexOf(seatplace), 1)
-          seatplace.className = 'outer-seat'
-          seatplace.firstElementChild.className = 'inner-seat'
-          break;
-        case 'inner-seat chosen':
-          chosen_places.splice(chosen_places.indexOf(seatplace.parentElement), 1)
-          seatplace.className = 'inner-seat'
-          seatplace.parentElement.className = 'outer-seat'
-          break;
+    function fill() {
+      for (let i = 0; i < 7; i++) {
+        if (localStorage.getItem(i) != undefined) {
+          sessions.push(localStorage.getItem(i));
+          continue;
+        } else {
+          let session = new Session();
+          for (let j = 1; j <= 6; j++) {
+            let random_size = randomInteger(4, 16);
+            let hall = new Hall(random_size, random_size, j + i * 7);
+            session.addHall(hall);
+          }
+          sessions.push(session);
+        }
       }
     }
-  }
 
-  function reserve() {
-    let children = Array.prototype.slice.call(document.getElementsByClassName('seatplan')[0].children);
-    let places = children.filter(child => child.tagName == 'DIV')
-    chosen_places.forEach(chosen_place => activeHall.setCell(places.indexOf(chosen_place), Status.taken))
-    activeHall.build()
-    chosen_places.length = 0
-  }
-</script>
+    onload = function () {
+      fill();
 
-<style>
-  .navigation {
-    width: 100%;
-    background-color: #333;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-  }
+      let navigations = document.getElementsByClassName("navigation");
 
-  .navigation a {
-    float: left;
-    display: block;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
-  }
+      Array.prototype.forEach.call(navigations, (navigation) => {
+        navigation.onclick = function (event) {
+          chosen_places.length = 0;
 
-  .active {
-    background-color: #3366CC;
-    color: white;
-  }
+          let active = event.target.parentElement.getElementsByClassName(
+            "active"
+          )[0];
+          let orderedToBeActive = event.target;
+          if (active == undefined) return;
+          active.setAttribute("class", "");
+          orderedToBeActive.className = "active";
 
-  .navigation a:hover {
-    background-color: #555;
-    color: rgb(162, 171, 219);
-    -webkit-transition: background 0.5s ease, color 0.3s ease;
-  }
+          let timeActive = document.getElementsByClassName("active")[1];
+          let dateActive = document.getElementsByClassName("active")[0];
 
-  div {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
+          activeHall = sessions[dateActive.id].halls[timeActive.id];
+          activeHall.build();
+        };
+      });
 
-  .outer-seat {
-    width: 40px;
-    height: 40px;
-    border-radius: 4.5px;
-    border: 3.5px solid #D8D8D8;
-    background: white;
-    position: relative;
-    margin: 2px;
-  }
+      let seatplan = document.getElementsByClassName("seatplan")[0];
+      seatplan.onclick = function (event) {
+        let seatplace = event.target;
 
-  .inner-seat {
-    width: 35px;
-    height: 35px;
-    border-radius: 2px;
-    top: 50%;
-    left: 50%;
-    margin: -17.5px 0px 0px -17.5px;
-    background: #D8D8D8;
-    position: absolute;
-  }
+        switch (seatplace.className) {
+          case "inner-seat":
+            chosen_places.push(seatplace.parentElement);
+            seatplace.className += " chosen";
+            seatplace.parentElement.className += " chosen";
+            break;
+          case "outer-seat":
+            chosen_places.push(seatplace);
+            seatplace.className += " chosen";
+            seatplace.firstElementChild.className += " chosen";
+            break;
+          case "outer-seat chosen":
+            chosen_places.splice(chosen_places.indexOf(seatplace), 1);
+            seatplace.className = "outer-seat";
+            seatplace.firstElementChild.className = "inner-seat";
+            break;
+          case "inner-seat chosen":
+            chosen_places.splice(
+              chosen_places.indexOf(seatplace.parentElement),
+              1
+            );
+            seatplace.className = "inner-seat";
+            seatplace.parentElement.className = "outer-seat";
+            break;
+        }
+      };
+    };
 
-  .inner-seat.taken {
-    background: #d8b8b8;
-  }
+    function reserve() {
+      let children = Array.prototype.slice.call(
+        document.getElementsByClassName("seatplan")[0].children
+      );
+      let places = children.filter((child) => child.tagName == "DIV");
+      chosen_places.forEach((chosen_place) =>
+        activeHall.setCell(places.indexOf(chosen_place), Status.taken)
+      );
+      activeHall.build();
+      chosen_places.length = 0;
+    }
+  </script>
 
-  .outer-seat.taken {
-    border-color: #d8b8b8;
-  }
+  <style>
+    .navigation {
+      width: 100%;
+      background-color: #333;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+    }
 
-  .hall {
-    text-align: center;
-  }
+    .navigation a {
+      float: left;
+      display: block;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 17px;
+    }
 
-  #div-inline {
-    float: left;
-  }
+    .active {
+      background-color: #3366cc;
+      color: white;
+    }
 
-  .outer-seat:hover,
-  .outer-seat.chosen {
-    border-color: #3366CC;
-    -webkit-transition: background 0.5s ease, color 0.3s ease;
-  }
+    .navigation a:hover {
+      background-color: #555;
+      color: rgb(162, 171, 219);
+      -webkit-transition: background 0.5s ease, color 0.3s ease;
+    }
 
-  .seatPlanWrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
+    div {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-  #div-inline:hover .inner-seat,
-  .inner-seat.chosen {
-    background: #3366CC;
-    -webkit-transition: background 0.5s ease, color 0.3s ease;
-  }
+    .outer-seat {
+      width: 40px;
+      height: 40px;
+      border-radius: 4.5px;
+      border: 3.5px solid #d8d8d8;
+      background: white;
+      position: relative;
+      margin: 2px;
+    }
 
-  .clearBoth {
-    clear: both;
-  }
+    .inner-seat {
+      width: 35px;
+      height: 35px;
+      border-radius: 2px;
+      top: 50%;
+      left: 50%;
+      margin: -17.5px 0px 0px -17.5px;
+      background: #d8d8d8;
+      position: absolute;
+    }
 
-  .selected-innerColor {
-    background-color: #3366CC;
-  }
+    .inner-seat.taken {
+      background: #d8b8b8;
+    }
 
-  .selected-outerColor {
-    border-color: #3366CC;
-  }
+    .outer-seat.taken {
+      border-color: #d8b8b8;
+    }
 
-  .button {
-    background-color: #3366CC;
-    border-radius: 5px;
-    border-color: transparent;
-    color: white;
-    padding: 10px 22px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-  }
+    .hall {
+      text-align: center;
+    }
 
-  .button.disabled {
-    background-color: rgb(176, 197, 255);
-  }
+    #div-inline {
+      float: left;
+    }
 
-  .button.disabled:hover {
-    background-color: rgb(176, 197, 255);
-  }
+    .outer-seat:hover,
+    .outer-seat.chosen {
+      border-color: #3366cc;
+      -webkit-transition: background 0.5s ease, color 0.3s ease;
+    }
 
-  .button:hover {
-    background-color: rgb(78, 121, 240);
-    -webkit-transition: background 0.5s ease, color 0.3s ease;
-  }
-</style>
+    .seatPlanWrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
 
-<body>
-  <div class="options">
-    <div class="navigation" id="navigation-Session">
-      <a href="#" class="active" id=0>Понедельник</a>
-      <a href="#" id=1>Вторник</a>
-      <a href="#" id=2>Среда</a>
-      <a href="#" id=3>Четверг</a>
-      <a href="#" id=4>Пятница</a>
-      <a href="#" id=5>Суббота</a>
-      <a href="#" id=6>Воскресенье</a>
+    #div-inline:hover .inner-seat,
+    .inner-seat.chosen {
+      background: #3366cc;
+      -webkit-transition: background 0.5s ease, color 0.3s ease;
+    }
+
+    .clearBoth {
+      clear: both;
+    }
+
+    .selected-innerColor {
+      background-color: #3366cc;
+    }
+
+    .selected-outerColor {
+      border-color: #3366cc;
+    }
+
+    .button {
+      background-color: #3366cc;
+      border-radius: 5px;
+      border-color: transparent;
+      color: white;
+      padding: 10px 22px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+    }
+
+    .button.disabled {
+      background-color: rgb(176, 197, 255);
+    }
+
+    .button.disabled:hover {
+      background-color: rgb(176, 197, 255);
+    }
+
+    .button:hover {
+      background-color: rgb(78, 121, 240);
+      -webkit-transition: background 0.5s ease, color 0.3s ease;
+    }
+  </style>
+
+  <body>
+    <div class="options">
+      <div class="navigation" id="navigation-Session">
+        <a href="#" class="active" id="0">Понедельник</a>
+        <a href="#" id="1">Вторник</a>
+        <a href="#" id="2">Среда</a>
+        <a href="#" id="3">Четверг</a>
+        <a href="#" id="4">Пятница</a>
+        <a href="#" id="5">Суббота</a>
+        <a href="#" id="6">Воскресенье</a>
+      </div>
+
+      <br />
+
+      <div class="navigation" id="navigation-time">
+        <a href="#" class="active" id="0">10:00</a>
+        <a href="#" id="1">12:00</a>
+        <a href="#" id="2">14:00</a>
+        <a href="#" id="3">16:00</a>
+        <a href="#" id="4">18:00</a>
+        <a href="#" id="5">20:00</a>
+      </div>
     </div>
 
-    <br>
+    <br />
 
-    <div class="navigation" id="navigation-time">
-      <a href="#" class="active" id=0>10:00</a>
-      <a href="#" id=1>12:00</a>
-      <a href="#" id=2>14:00</a>
-      <a href="#" id=3>16:00</a>
-      <a href="#" id=4>18:00</a>
-      <a href="#" id=5>20:00</a>
+    <div class="hall">
+      <h2 id="hall-id"></h2>
+      <div class="seatplan"></div>
+
+      <br />
     </div>
-  </div>
-
-  <br>
-
-  <div class="hall">
-    <h2 id="hall-id"></h2>
-    <div class="seatplan">
-
+    <div style="text-align: center">
+      <br />
+      <input
+        type="button"
+        onclick="reserve()"
+        value="Забронировать"
+        class="button"
+      />
     </div>
-
-    <br>
-  </div>
-  <div style="text-align: center;">
-    <br>
-    <input type="button" onclick="reserve()" value="Забронировать" class="button">
-  </div>
-</body>
-
+  </body>
 </html>

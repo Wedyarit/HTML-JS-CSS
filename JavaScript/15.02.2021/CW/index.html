@@ -1,365 +1,424 @@
 <!DOCTYPE html>
 <html>
-<title>Web Page</title>
+  <title>Web Page</title>
 
-<head>
-  <script language="javascript">
-    var timerDisplay = document.getElementById('timer');
-    var startTime;
-    var updatedTime;
-    var difference;
-    var tInterval;
-    var savedTime;
-    var paused = 0;
-    var running = 0;
-    function startTimer() {
-      if (!running) {
-        startTime = new Date().getTime();
-        tInterval = setInterval(getShowTime, 1);
-        // change 1 to 1000 above to run script every second instead of every millisecond. one other change will be needed in the getShowTime() function below for this to work. see comment there.   
+  <head>
+    <script language="javascript">
+      var timerDisplay = document.getElementById("timer");
+      var startTime;
+      var updatedTime;
+      var difference;
+      var tInterval;
+      var savedTime;
+      var paused = 0;
+      var running = 0;
+      function startTimer() {
+        if (!running) {
+          startTime = new Date().getTime();
+          tInterval = setInterval(getShowTime, 1);
+          // change 1 to 1000 above to run script every second instead of every millisecond. one other change will be needed in the getShowTime() function below for this to work. see comment there.
 
-        paused = 0;
-        running = 1;
-      }
-    }
-    function pauseTimer() {
-      if (!difference) {
-        // if timer never started, don't allow pause button to do anything
-      } else if (!paused) {
-        clearInterval(tInterval);
-        savedTime = difference;
-        paused = 1;
-        running = 0;
-      } else {
-        // if the timer was already paused, when they click pause again, start the timer again
-        startTimer();
-      }
-    }
-    function resetTimer() {
-      clearInterval(tInterval);
-      savedTime = 0;
-      difference = 0;
-      paused = 0;
-      running = 0;
-    }
-    function getShowTime() {
-      updatedTime = new Date().getTime();
-      if (savedTime) {
-        difference = (updatedTime - startTime) + savedTime;
-      } else {
-        difference = updatedTime - startTime;
-      }
-      var hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      var seconds = Math.floor((difference % (1000 * 60)) / 1000);
-      var milliseconds = Math.floor((difference % (1000 * 60)) / 100);
-      hours = (hours < 10) ? "0" + hours : hours;
-      minutes = (minutes < 10) ? "0" + minutes : minutes;
-      seconds = (seconds < 10) ? "0" + seconds : seconds;
-      milliseconds = (milliseconds < 100) ? (milliseconds < 10) ? "00" + milliseconds : "0" + milliseconds : milliseconds;
-      document.getElementById('timer').innerHTML = 'Время: ' + hours + ':' + minutes + ':' + seconds;
-    }
-  </script>
-
-  <script type="text/javascript">
-    let size;
-    let size_sqrt;
-    let sudoku = [];
-    let mistakes = 0;
-    let game_active;
-    let promised = 0;
-    let respect_mistakes;
-
-    function swap(x, y) {
-      var t = x;
-      x = y;
-      y = t;
-      return [x, y];
-    }
-
-    function isDigit(symbol) {
-      return symbol >= '0' && symbol <= '9'
-    }
-
-    function getShiftedArray(array, n) {
-      var i = array.length - n;
-      var front = array.slice(0, i);
-      var back = array.slice(i);
-      return back.concat(front);
-    }
-
-    function shuffle(a) {
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
-
-    function randomInteger(min, max) {
-      let rand = min - 0.5 + Math.random() * (max - min + 1);
-
-      return Math.round(rand);
-    }
-
-    onload = function () {
-      let table = document.body.getElementsByTagName('table')[0]
-      let chosen_cell
-      let previous_cell
-      let prev_class
-
-      table.onclick = function (event) {
-        if (!game_active) return
-        chosen_cell = event.target
-        if (chosen_cell.tagName != 'TD') return
-        if (previous_cell != undefined && previous_cell.className == 'cell-highlighted')
-          previous_cell.setAttribute('class', prev_class)
-        prev_class = chosen_cell.className
-        previous_cell = chosen_cell
-        chosen_cell.setAttribute('class', 'cell-highlighted')
-      }
-
-      document.onkeydown = function (event) {
-        if (!game_active) return
-        switch (event.keyCode) {
-          case 37:
-            if (chosen_cell.cellIndex - 1 < 0) return;
-            chosen_cell = table.rows[chosen_cell.parentNode.rowIndex].cells[chosen_cell.cellIndex - 1];
-            break;
-          case 38:
-            if (chosen_cell.parentNode.rowIndex - 1 < 0) return;
-            chosen_cell = table.rows[chosen_cell.parentNode.rowIndex - 1].cells[chosen_cell.cellIndex];
-            break;
-          case 39:
-            if (chosen_cell.cellIndex + 1 >= size) return;
-            chosen_cell = table.rows[chosen_cell.parentNode.rowIndex].cells[chosen_cell.cellIndex + 1];
-            break;
-          case 40:
-            if (chosen_cell.parentNode.rowIndex + 1 >= size) return;
-            chosen_cell = table.rows[chosen_cell.parentNode.rowIndex + 1].cells[chosen_cell.cellIndex];
-            break;
-          default:
-            return;
+          paused = 0;
+          running = 1;
         }
-        if (previous_cell != undefined && previous_cell.className == 'cell-highlighted')
-          previous_cell.setAttribute('class', prev_class)
-        previous_cell = chosen_cell
-        prev_class = chosen_cell.className
-        chosen_cell.setAttribute('class', 'cell-highlighted')
       }
-
-      document.onkeypress = function (event) {
-        if (!game_active) return
-        if (!isDigit(event.key) || chosen_cell === undefined) return;
-        if (chosen_cell.innerText == sudoku[chosen_cell.parentNode.rowIndex][chosen_cell.cellIndex]) return
-        chosen_cell.innerText = event.key
-        if (sudoku[chosen_cell.parentNode.rowIndex][chosen_cell.cellIndex] != parseInt(event.key)) {
-          chosen_cell.setAttribute('class', 'cell-mistake-highlighted');
-          if (respect_mistakes) {
-            mistakes++;
-            document.getElementById('mistakes').innerHTML = `Ошибок: \n${mistakes} / 3`
-            if (mistakes == 3) game_over();
-          }
+      function pauseTimer() {
+        if (!difference) {
+          // if timer never started, don't allow pause button to do anything
+        } else if (!paused) {
+          clearInterval(tInterval);
+          savedTime = difference;
+          paused = 1;
+          running = 0;
         } else {
-          chosen_cell.setAttribute('class', 'cell-correct-highlighted');
-          if (document.getElementsByClassName("cell-correct-highlighted").length == size ** 2 - promised) game_completed();
+          // if the timer was already paused, when they click pause again, start the timer again
+          startTimer();
         }
       }
-    };
-
-    function setup() {
-      startTimer();
-      mistakes = 0;
-      game_active = true;
-      document.getElementById('status').style.display = "none";
-      document.getElementById('replay').style.display = 'none'
-      document.getElementById('mistakes').innerHTML = ''
-      respect_mistakes = document.getElementById('mistakes_limit').checked
-    }
-
-    function create() {
-      size = parseInt(document.getElementById("size").value);
-      size_sqrt = Math.sqrt(size);
-      sudoku.length = 0
-
-      if (!Number.isInteger(size_sqrt)) {
-        alert("Некорректный размер");
-        return false;
+      function resetTimer() {
+        clearInterval(tInterval);
+        savedTime = 0;
+        difference = 0;
+        paused = 0;
+        running = 0;
       }
-
-      var tbody = document.getElementsByTagName("tbody")[0];
-      while (tbody.firstChild) tbody.removeChild(tbody.lastChild);
-
-      for (let i = 0; i < size; i++) {
-        let tr = document.createElement("tr");
-        for (let j = 0; j < size; j++) {
-          let td = document.createElement("td");
-          if ((i + 1) % size_sqrt == 0) td.style.borderBottom = "3px solid";
-          else if (i % size_sqrt == 0) td.style.borderTop = "3px solid";
-          if ((j + 1) % size_sqrt == 0) td.style.borderRight = "3px solid";
-          else if (j % size_sqrt == 0) td.style.borderLeft = "3px solid";
-          tr.appendChild(td);
+      function getShowTime() {
+        updatedTime = new Date().getTime();
+        if (savedTime) {
+          difference = updatedTime - startTime + savedTime;
+        } else {
+          difference = updatedTime - startTime;
         }
-        tbody.appendChild(tr);
+        var hours = Math.floor(
+          (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        var milliseconds = Math.floor((difference % (1000 * 60)) / 100);
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        milliseconds =
+          milliseconds < 100
+            ? milliseconds < 10
+              ? "00" + milliseconds
+              : "0" + milliseconds
+            : milliseconds;
+        document.getElementById("timer").innerHTML =
+          "Время: " + hours + ":" + minutes + ":" + seconds;
       }
-    }
+    </script>
 
-    function generate_numbers() {
-      let numbers = [];
-      let new_numbers = [];
-      let row_numbers = [];
+    <script type="text/javascript">
+      let size;
+      let size_sqrt;
+      let sudoku = [];
+      let mistakes = 0;
+      let game_active;
+      let promised = 0;
+      let respect_mistakes;
 
-      for (let i = 1; i <= size; i++) row_numbers.push(i);
-      shuffle(row_numbers);
-
-      for (let i = 0; i < size_sqrt; i++) {
-        row_numbers = getShiftedArray(row_numbers, size_sqrt - 1);
-        numbers.push(row_numbers);
-        for (let j = 1; j < size_sqrt; j++)
-          numbers.push(getShiftedArray(row_numbers, j * size_sqrt));
+      function swap(x, y) {
+        var t = x;
+        x = y;
+        y = t;
+        return [x, y];
       }
 
-      for (let i = 0; i < numbers.length; i += size_sqrt)
-        for (shuffled_array of shuffle(numbers.slice(i, i + size_sqrt)))
-          new_numbers.push(shuffled_array);
-
-      numbers.length = 0;
-      for (let i = 0; i < new_numbers.length; i++) {
-        var column = [];
-        for (let j = 0; j < new_numbers.length; j++)
-          column.push(new_numbers[j][i]);
-        numbers.push(column);
+      function isDigit(symbol) {
+        return symbol >= "0" && symbol <= "9";
       }
 
-      for (let i = 0; i < numbers.length; i += size_sqrt)
-        for (shuffled_array of shuffle(numbers.slice(i, i + size_sqrt)))
-          sudoku.push(shuffled_array);
-    }
+      function getShiftedArray(array, n) {
+        var i = array.length - n;
+        var front = array.slice(0, i);
+        var back = array.slice(i);
+        return back.concat(front);
+      }
 
-    function fill() {
-      let trs = document.getElementsByTagName("tr");
-      for (let i = 0; i < trs.length; i++) {
-        let tds = trs[i].getElementsByTagName("td");
-        for (let j = 0; j < tds.length; j++)
-          if (randomInteger(1, 100) >= parseInt(document.getElementById('difficulty').value)) {
-            promised++;
-            tds[j].innerText = sudoku[i][j];
+      function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function randomInteger(min, max) {
+        let rand = min - 0.5 + Math.random() * (max - min + 1);
+
+        return Math.round(rand);
+      }
+
+      onload = function () {
+        let table = document.body.getElementsByTagName("table")[0];
+        let chosen_cell;
+        let previous_cell;
+        let prev_class;
+
+        table.onclick = function (event) {
+          if (!game_active) return;
+          chosen_cell = event.target;
+          if (chosen_cell.tagName != "TD") return;
+          if (
+            previous_cell != undefined &&
+            previous_cell.className == "cell-highlighted"
+          )
+            previous_cell.setAttribute("class", prev_class);
+          prev_class = chosen_cell.className;
+          previous_cell = chosen_cell;
+          chosen_cell.setAttribute("class", "cell-highlighted");
+        };
+
+        document.onkeydown = function (event) {
+          if (!game_active) return;
+          switch (event.keyCode) {
+            case 37:
+              if (chosen_cell.cellIndex - 1 < 0) return;
+              chosen_cell =
+                table.rows[chosen_cell.parentNode.rowIndex].cells[
+                  chosen_cell.cellIndex - 1
+                ];
+              break;
+            case 38:
+              if (chosen_cell.parentNode.rowIndex - 1 < 0) return;
+              chosen_cell =
+                table.rows[chosen_cell.parentNode.rowIndex - 1].cells[
+                  chosen_cell.cellIndex
+                ];
+              break;
+            case 39:
+              if (chosen_cell.cellIndex + 1 >= size) return;
+              chosen_cell =
+                table.rows[chosen_cell.parentNode.rowIndex].cells[
+                  chosen_cell.cellIndex + 1
+                ];
+              break;
+            case 40:
+              if (chosen_cell.parentNode.rowIndex + 1 >= size) return;
+              chosen_cell =
+                table.rows[chosen_cell.parentNode.rowIndex + 1].cells[
+                  chosen_cell.cellIndex
+                ];
+              break;
+            default:
+              return;
           }
+          if (
+            previous_cell != undefined &&
+            previous_cell.className == "cell-highlighted"
+          )
+            previous_cell.setAttribute("class", prev_class);
+          previous_cell = chosen_cell;
+          prev_class = chosen_cell.className;
+          chosen_cell.setAttribute("class", "cell-highlighted");
+        };
+
+        document.onkeypress = function (event) {
+          if (!game_active) return;
+          if (!isDigit(event.key) || chosen_cell === undefined) return;
+          if (
+            chosen_cell.innerText ==
+            sudoku[chosen_cell.parentNode.rowIndex][chosen_cell.cellIndex]
+          )
+            return;
+          chosen_cell.innerText = event.key;
+          if (
+            sudoku[chosen_cell.parentNode.rowIndex][chosen_cell.cellIndex] !=
+            parseInt(event.key)
+          ) {
+            chosen_cell.setAttribute("class", "cell-mistake-highlighted");
+            if (respect_mistakes) {
+              mistakes++;
+              document.getElementById(
+                "mistakes"
+              ).innerHTML = `Ошибок: \n${mistakes} / 3`;
+              if (mistakes == 3) game_over();
+            }
+          } else {
+            chosen_cell.setAttribute("class", "cell-correct-highlighted");
+            if (
+              document.getElementsByClassName("cell-correct-highlighted")
+                .length ==
+              size ** 2 - promised
+            )
+              game_completed();
+          }
+        };
+      };
+
+      function setup() {
+        startTimer();
+        mistakes = 0;
+        game_active = true;
+        document.getElementById("status").style.display = "none";
+        document.getElementById("replay").style.display = "none";
+        document.getElementById("mistakes").innerHTML = "";
+        respect_mistakes = document.getElementById("mistakes_limit").checked;
       }
-    }
 
-    function game_over() {
-      game_active = false;
-      document.getElementById('status').innerHTML = 'Игра окончена!'
-      document.getElementById('status').style.color = 'red';
-      document.getElementById('status').style.display = 'inline-block';
-      document.getElementById('replay').style.display = 'inline-block'
-    }
+      function create() {
+        size = parseInt(document.getElementById("size").value);
+        size_sqrt = Math.sqrt(size);
+        sudoku.length = 0;
 
-    function game_completed() {
-      game_active = false;
-      document.getElementById('status').innerHTML = 'Игра завершена!'
-      document.getElementById('status').style.color = 'green';
-      document.getElementById('status').style.display = 'inline-block';
-      document.getElementById('replay').style.display = 'inline-block'
-    }
+        if (!Number.isInteger(size_sqrt)) {
+          alert("Некорректный размер");
+          return false;
+        }
 
-    function game() {
-      setup();
-      create();
-      generate_numbers();
-      fill();
-    }
-  </script>
+        var tbody = document.getElementsByTagName("tbody")[0];
+        while (tbody.firstChild) tbody.removeChild(tbody.lastChild);
 
-  <style>
-    table {
-      margin: 2em auto;
-      border-spacing: 0;
-    }
+        for (let i = 0; i < size; i++) {
+          let tr = document.createElement("tr");
+          for (let j = 0; j < size; j++) {
+            let td = document.createElement("td");
+            if ((i + 1) % size_sqrt == 0) td.style.borderBottom = "3px solid";
+            else if (i % size_sqrt == 0) td.style.borderTop = "3px solid";
+            if ((j + 1) % size_sqrt == 0) td.style.borderRight = "3px solid";
+            else if (j % size_sqrt == 0) td.style.borderLeft = "3px solid";
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
+        }
+      }
 
-    td {
-      height: 30px;
-      width: 30px;
-      border: 1px solid;
-      text-align: center;
-    }
+      function generate_numbers() {
+        let numbers = [];
+        let new_numbers = [];
+        let row_numbers = [];
 
-    div {
-      text-align: center;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+        for (let i = 1; i <= size; i++) row_numbers.push(i);
+        shuffle(row_numbers);
 
-    .cell-highlighted {
-      background-color: #add8e6;
-    }
+        for (let i = 0; i < size_sqrt; i++) {
+          row_numbers = getShiftedArray(row_numbers, size_sqrt - 1);
+          numbers.push(row_numbers);
+          for (let j = 1; j < size_sqrt; j++)
+            numbers.push(getShiftedArray(row_numbers, j * size_sqrt));
+        }
 
-    .cell-mistake-highlighted {
-      background-color: #dd8191;
-    }
+        for (let i = 0; i < numbers.length; i += size_sqrt)
+          for (shuffled_array of shuffle(numbers.slice(i, i + size_sqrt)))
+            new_numbers.push(shuffled_array);
 
-    .cell-correct-highlighted {
-      background-color: #97e5a8;
-    }
+        numbers.length = 0;
+        for (let i = 0; i < new_numbers.length; i++) {
+          var column = [];
+          for (let j = 0; j < new_numbers.length; j++)
+            column.push(new_numbers[j][i]);
+          numbers.push(column);
+        }
 
-    .button {
-      background-color: #4b6dbd;
-      border: none;
-      color: white;
-      padding: 10px 32px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 20px;
-    }
+        for (let i = 0; i < numbers.length; i += size_sqrt)
+          for (shuffled_array of shuffle(numbers.slice(i, i + size_sqrt)))
+            sudoku.push(shuffled_array);
+      }
 
-    .checkbox {
-      position: absolute;
-      height: 25px;
-      width: 25px;
-      background-color: #eee;
-    }
+      function fill() {
+        let trs = document.getElementsByTagName("tr");
+        for (let i = 0; i < trs.length; i++) {
+          let tds = trs[i].getElementsByTagName("td");
+          for (let j = 0; j < tds.length; j++)
+            if (
+              randomInteger(1, 100) >=
+              parseInt(document.getElementById("difficulty").value)
+            ) {
+              promised++;
+              tds[j].innerText = sudoku[i][j];
+            }
+        }
+      }
 
-    p {
-      font-size: 20px;
-    }
-  </style>
-</head>
+      function game_over() {
+        game_active = false;
+        document.getElementById("status").innerHTML = "Игра окончена!";
+        document.getElementById("status").style.color = "red";
+        document.getElementById("status").style.display = "inline-block";
+        document.getElementById("replay").style.display = "inline-block";
+      }
 
-<body>
-  <div>
-    <h1>Sudoku</h1>
-  </div>
-  <br>
-  <div>
-    <h2>Игровые настройки</h2>
-    <p>Размер:
-      <input type="number" name="size" id="size" />
-    </p>
-    <p>Лимит ошибок: 
-      <input type="checkbox" class="checkbox" name="mistakes_limit" id="mistakes_limit" />
-    </p>
-    <p>Игровая сложность:
-      <input type="range" min="1" max="100" id="difficulty" value="50">
-    </p>
-    <p><input type="button" class="button" value="Играть" onclick="game()" /></p>
-  </div>
-  <br>
-  <div>
-    <h2>Игра</h2>
-    <table>
-      <tbody></tbody>
-    </table>
-    <h2 id="status"></h2><br>
-    <input type="button" id="replay" class="button" style="display: none;" value="Еще раз" onclick="game()">
-  </div>
-  <br>
-  <div>
-    <h2>Статистика</h2>
-    <p id="mistakes" style="color: rgb(128, 42, 42)">
-    </p>
-    <p id="timer"></p>
-  </div>
-</body>
+      function game_completed() {
+        game_active = false;
+        document.getElementById("status").innerHTML = "Игра завершена!";
+        document.getElementById("status").style.color = "green";
+        document.getElementById("status").style.display = "inline-block";
+        document.getElementById("replay").style.display = "inline-block";
+      }
 
+      function game() {
+        setup();
+        create();
+        generate_numbers();
+        fill();
+      }
+    </script>
+
+    <style>
+      table {
+        margin: 2em auto;
+        border-spacing: 0;
+      }
+
+      td {
+        height: 30px;
+        width: 30px;
+        border: 1px solid;
+        text-align: center;
+      }
+
+      div {
+        text-align: center;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .cell-highlighted {
+        background-color: #add8e6;
+      }
+
+      .cell-mistake-highlighted {
+        background-color: #dd8191;
+      }
+
+      .cell-correct-highlighted {
+        background-color: #97e5a8;
+      }
+
+      .button {
+        background-color: #4b6dbd;
+        border: none;
+        color: white;
+        padding: 10px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 20px;
+      }
+
+      .checkbox {
+        position: absolute;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+      }
+
+      p {
+        font-size: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <h1>Sudoku</h1>
+    </div>
+    <br />
+    <div>
+      <h2>Игровые настройки</h2>
+      <p>
+        Размер:
+        <input type="number" name="size" id="size" />
+      </p>
+      <p>
+        Лимит ошибок: 
+        <input
+          type="checkbox"
+          class="checkbox"
+          name="mistakes_limit"
+          id="mistakes_limit"
+        />
+      </p>
+      <p>
+        Игровая сложность:
+        <input type="range" min="1" max="100" id="difficulty" value="50" />
+      </p>
+      <p>
+        <input type="button" class="button" value="Играть" onclick="game()" />
+      </p>
+    </div>
+    <br />
+    <div>
+      <h2>Игра</h2>
+      <table>
+        <tbody></tbody>
+      </table>
+      <h2 id="status"></h2>
+      <br />
+      <input
+        type="button"
+        id="replay"
+        class="button"
+        style="display: none"
+        value="Еще раз"
+        onclick="game()"
+      />
+    </div>
+    <br />
+    <div>
+      <h2>Статистика</h2>
+      <p id="mistakes" style="color: rgb(128, 42, 42)"></p>
+      <p id="timer"></p>
+    </div>
+  </body>
 </html>
