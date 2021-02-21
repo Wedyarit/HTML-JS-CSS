@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
   <title>Cinema</title>
-
-  <head> </head>
-
+  <head></head>
+  <!-- Classes -->
   <script>
+    const Status = { empty: 1, taken: 2 };
+    Object.freeze(Status);
+
     class Session {
       constructor() {
         this.halls = [];
@@ -14,9 +16,6 @@
         this.halls.push(hall);
       }
     }
-
-    const Status = { empty: 1, taken: 2 };
-    Object.freeze(Status);
 
     class Hall {
       constructor(rows, columns, number) {
@@ -33,48 +32,47 @@
       setCell(index, status) {
         this.cells[index] = new Cell(status);
       }
+    }
 
-      build() {
-        let seatplan = document.getElementsByClassName("seatplan")[0];
+    function build(hall) {
+      let seatplan = document.getElementsByClassName("seatplan")[0];
 
-        while (seatplan.firstChild) {
-          seatplan.removeChild(seatplan.lastChild);
-        }
-
-        let hall = document.getElementsByClassName("hall")[0];
-        document.getElementById("hall-id").innerHTML = `Зал #${this.number}`;
-
-        for (let i = 0; i < this.rows; i++) {
-          for (let j = 0; j < this.columns; j++) {
-            let outline_seat = document.createElement("div");
-            let inline_seat = document.createElement("div");
-            if (this.cells[this.rows * i + j].status == Status.empty) {
-              outline_seat.className = "outer-seat";
-              inline_seat.className = "inner-seat";
-            } else if (this.cells[this.rows * i + j].status == Status.taken) {
-              outline_seat.className = "outer-seat taken";
-              inline_seat.className = "inner-seat taken";
-            }
-
-            if (this.disabled) {
-              outline_seat.className += " disabled";
-              inline_seat.className += " disabled";
-            }
-
-            outline_seat.id = "div-inline";
-            outline_seat.appendChild(inline_seat);
-            seatplan.appendChild(outline_seat);
-          }
-          let clear_both = document.createElement("br");
-          clear_both.className = "clearBoth";
-          seatplan.appendChild(clear_both);
-        }
-
-        let seatPlanWrapper = document.createElement("div");
-        seatPlanWrapper.classList.add("seatPlanWrapper");
-        seatPlanWrapper.appendChild(seatplan);
-        hall.appendChild(seatPlanWrapper);
+      while (seatplan.firstChild) {
+        seatplan.removeChild(seatplan.lastChild);
       }
+
+      document.getElementById("hall-id").innerHTML = `Зал #${hall.number}`;
+
+      for (let i = 0; i < hall.rows; i++) {
+        for (let j = 0; j < hall.columns; j++) {
+          let outline_seat = document.createElement("div");
+          let inline_seat = document.createElement("div");
+          if (hall.cells[hall.rows * i + j].status == Status.empty) {
+            outline_seat.className = "outer-seat";
+            inline_seat.className = "inner-seat";
+          } else if (hall.cells[hall.rows * i + j].status == Status.taken) {
+            outline_seat.className = "outer-seat taken";
+            inline_seat.className = "inner-seat taken";
+          }
+
+          if (hall.disabled) {
+            outline_seat.className += " disabled";
+            inline_seat.className += " disabled";
+          }
+
+          outline_seat.id = "div-inline";
+          outline_seat.appendChild(inline_seat);
+          seatplan.appendChild(outline_seat);
+        }
+        let clear_both = document.createElement("br");
+        clear_both.className = "clearBoth";
+        seatplan.appendChild(clear_both);
+      }
+
+      let seatPlanWrapper = document.createElement("div");
+      seatPlanWrapper.classList.add("seatPlanWrapper");
+      seatPlanWrapper.appendChild(seatplan);
+      document.getElementsByClassName("hall")[0].appendChild(seatPlanWrapper);
     }
 
     class Cell {
@@ -84,60 +82,97 @@
     }
   </script>
 
+  <!-- Utils -->
   <script>
-    let chosen_places = [];
-    let activeHall;
-
+    // Random inetger in range
     function randomInteger(min, max) {
       let rand = min - 0.5 + Math.random() * (max - min + 1);
 
       return Math.round(rand);
     }
+
+    Date.prototype.addDays = function (days) {
+      var date = new Date(this.valueOf());
+      date.setDate(date.getDate() + days);
+      return date;
+    };
+
+    // Set dates value
+    function setDates() {
+      let navigation_session = document.getElementById("navigation-session");
+      for (let i = 0; i < navigation_session.childElementCount; i++) {
+        navigation_session.getElementsByTagName("A")[
+          i
+        ].innerHTML = new Date().addDays(i - 3).toDateString();
+      }
+    }
+
+    // Returns random generated hall
+    function randomHall(number) {
+      let random_size = randomInteger(4, 16);
+      return new Hall(random_size, random_size, number);
+    }
+  </script>
+
+  <!-- Sessions -->
+  <script>
     let sessions = [];
 
+    // Random hall filling (empty and taken place seats)
     function random_fill() {
+      sessions.length = 0;
       for (let i = 0; i < 7; i++) {
         let session = new Session();
         for (let j = 1; j <= 6; j++) {
           let random_size = randomInteger(4, 16);
           let hall = new Hall(random_size, random_size, j + i * 7);
-          if (new Date().getDay() > i + 1) {
+          if (
+            Date.parse(
+              document.getElementById("navigation-session").children[i]
+                .innerHTML
+            ) < new Date()
+          ) {
             hall.disabled = true;
-            for (let g = 0; g < random_size ** 2; g++) {
-              if (randomInteger(0, 100) < 30) {
-                hall.setCell(g, Status.taken);
-              }
-            }
+            for (let g = 0; g < random_size ** 2; g++)
+              if (randomInteger(0, 100) < 30) hall.setCell(g, Status.taken);
           }
           session.addHall(hall);
         }
-        if (new Date().getDay() > i + 1) localStorage.setItem(i, session);
+        if (
+          Date.parse(
+            document.getElementById("navigation-session").children[i].innerHTML
+          ) < new Date()
+        )
+          localStorage.setItem(i, JSON.stringify(session));
         sessions.push(session);
       }
     }
 
+    // Fill only halls in days that already passed
     function fill() {
       for (let i = 0; i < 7; i++) {
         if (localStorage.getItem(i) != undefined) {
-          sessions.push(localStorage.getItem(i));
-          continue;
+          sessions.push(JSON.parse(localStorage.getItem(i)));
         } else {
           let session = new Session();
-          for (let j = 1; j <= 6; j++) {
-            let random_size = randomInteger(4, 16);
-            let hall = new Hall(random_size, random_size, j + i * 7);
-            session.addHall(hall);
-          }
+          for (let j = 1; j <= 6; j++) session.addHall(randomHall(j + i * 7));
           sessions.push(session);
         }
       }
     }
+  </script>
+
+  <!--Reserving-->
+  <script>
+    let chosen_places = [];
+    let activeHall;
 
     onload = function () {
+      setDates();
       fill();
 
+      // Display selected hall
       let navigations = document.getElementsByClassName("navigation");
-
       Array.prototype.forEach.call(navigations, (navigation) => {
         navigation.onclick = function (event) {
           chosen_places.length = 0;
@@ -151,13 +186,20 @@
           orderedToBeActive.className = "active";
 
           let timeActive = document.getElementsByClassName("active")[1];
-          let dateActive = document.getElementsByClassName("active")[0];
+          let date = document.getElementById("navigation-session");
 
-          activeHall = sessions[dateActive.id].halls[timeActive.id];
-          activeHall.build();
+          activeHall =
+            sessions[
+              Array.prototype.indexOf.call(
+                date.children,
+                date.getElementsByClassName("active")[0]
+              )
+            ].halls[timeActive.id];
+          build(activeHall);
         };
       });
 
+      // Chosen places design
       let seatplan = document.getElementsByClassName("seatplan")[0];
       seatplan.onclick = function (event) {
         let seatplace = event.target;
@@ -190,6 +232,7 @@
       };
     };
 
+    // Reservation
     function reserve() {
       let children = Array.prototype.slice.call(
         document.getElementsByClassName("seatplan")[0].children
@@ -198,7 +241,7 @@
       chosen_places.forEach((chosen_place) =>
         activeHall.setCell(places.indexOf(chosen_place), Status.taken)
       );
-      activeHall.build();
+      build(activeHall);
       chosen_places.length = 0;
     }
   </script>
@@ -316,14 +359,6 @@
       font-size: 16px;
     }
 
-    .button.disabled {
-      background-color: rgb(176, 197, 255);
-    }
-
-    .button.disabled:hover {
-      background-color: rgb(176, 197, 255);
-    }
-
     .button:hover {
       background-color: rgb(78, 121, 240);
       -webkit-transition: background 0.5s ease, color 0.3s ease;
@@ -331,19 +366,18 @@
   </style>
 
   <body>
+    <!-- Navigation bars -->
     <div class="options">
-      <div class="navigation" id="navigation-Session">
-        <a href="#" class="active" id="0">Понедельник</a>
-        <a href="#" id="1">Вторник</a>
-        <a href="#" id="2">Среда</a>
-        <a href="#" id="3">Четверг</a>
-        <a href="#" id="4">Пятница</a>
-        <a href="#" id="5">Суббота</a>
-        <a href="#" id="6">Воскресенье</a>
+      <div class="navigation" id="navigation-session">
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#" class="active"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+        <a href="#"></a>
       </div>
-
       <br />
-
       <div class="navigation" id="navigation-time">
         <a href="#" class="active" id="0">10:00</a>
         <a href="#" id="1">12:00</a>
@@ -356,18 +390,27 @@
 
     <br />
 
+    <!-- Seatplan -->
     <div class="hall">
       <h2 id="hall-id"></h2>
       <div class="seatplan"></div>
-
       <br />
     </div>
+
+    <!-- Buttons -->
     <div style="text-align: center">
       <br />
       <input
         type="button"
         onclick="reserve()"
         value="Забронировать"
+        class="button"
+      />
+
+      <input
+        type="button"
+        onclick="random_fill();"
+        value="Сгенерировать"
         class="button"
       />
     </div>
