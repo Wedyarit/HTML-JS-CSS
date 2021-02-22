@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="node_modules/chart.js/dist/Chart.js"></script>
+
+</head>
+
+<style>
+  table,
+  th,
+  td {
+    border: 1px solid rgb(126, 126, 126, 0.5);
+    border-collapse: collapse;
+  }
+
+  input {
+    border: 0px;
+  }
+
+  div {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+</style>
+
+<body>
+
+  <div>
+    <table>
+      <tr>
+        <th>Институты</th>
+        <th>Колледжи</th>
+        <th>Училища</th>
+        <th>Школы</th>
+      </tr>
+      <tr>
+        <td><input id="institutes" type="number" value="15"></td>
+        <td><input id="colledges" type="number" value="10"></td>
+        <td><input id="sschools" type="number" value="15"></td>
+        <td><input id="schools" type="number" value="60"></td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="width: 500px; height: 500px;">
+    <canvas id="chart" width="100" height="100"></canvas>
+  </div>
+
+
+</body>
+
+<script>
+  var ctx = document.getElementById('chart').getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Институты', 'Колледжи', 'Училища', 'Школы'],
+      datasets: [{
+        label: '# of Votes',
+        data: [15, 10, 15, 60],
+        backgroundColor: [
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(238, 165, 255, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 206, 86, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(238, 165 255, 1)',
+          'rgba(75, 192, 192, 1)',
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+</script>
+<script>
+  onload = function () {
+    let inputs = document.getElementsByTagName('input');
+    Array.prototype.forEach.call(inputs, (input) => {
+      input.oninput = function (event) {
+        chart.destroy();
+        chart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: ['Институты', 'Колледжи', 'Училища', 'Школы'],
+            datasets: [{
+              label: '# of Votes',
+              data: [document.getElementById('institutes').value, document.getElementById('colledges').value, document.getElementById('sschools').value, document.getElementById('schools').value],
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        });
+      }
+    });
+  }
+</script>
+
+</html>

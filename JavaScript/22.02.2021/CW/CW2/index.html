@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<style>
+  .calculator-head {
+    height: 240px;
+    width: 400px;
+    background-color: rgb(251, 251, 251);
+    font-size: 37px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .calculator-body {
+    background-color: rgb(238, 238, 238);
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .numbers {
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .number-cell {
+    background-color: rgb(216, 216, 216);
+    width: 98px;
+    height: 98px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    transition: .1s;
+  }
+
+  #calculator-history {
+    color: rgb(192, 192, 192);
+    font-size: 24px;
+  }
+
+  .signs {
+    display: flex;
+    flex-wrap: wrap;
+    width: 300px;
+    justify-content: center;
+  }
+
+  .sign-cell {
+    background-color: rgb(192, 192, 192);
+    width: 98px;
+    height: 98px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    transition: .1s;
+  }
+
+  .cell:hover {
+    background-color: rgb(224, 224, 224);
+  }
+
+  .katya-cell {
+    background-color: rgb(192, 192, 192);
+    width: 98px;
+    height: 98px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    transition: .1s;
+  }
+
+  .cell {
+    margin: 1px;
+    cursor: pointer;
+  }
+
+  div {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+</style>
+
+<body>
+
+  <div id="calculator">
+    <div class="calculator-head">
+      <p><span id="calculator-history">0</span></p>
+      <span id="calculator-text">0</span>
+    </div>
+    <div class="calculator-body">
+      <div class="calculator-item">
+        <div class="signs">
+          <div class="cell number-cell sign-cell">%</div>
+          <div class="cell number-cell sign-cell">√</div>
+          <div class="cell number-cell sign-cell">x²</div>
+          <div class="cell number-cell sign-cell">CE</div>
+          <div class="cell number-cell sign-cell">C</div>
+          <div class="cell number-cell sign-cell">⌫</div>
+        </div>
+        <div class="numbers">
+          <div class="cell number-cell">7</div>
+          <div class="cell number-cell">8</div>
+          <div class="cell number-cell">9</div>
+          <div class="cell number-cell">4</div>
+          <div class="cell number-cell">5</div>
+          <div class="cell number-cell">6</div>
+          <div class="cell number-cell">1</div>
+          <div class="cell number-cell">2</div>
+          <div class="cell number-cell">3</div>
+          <div class="cell katya-cell">±</div>
+          <div class="cell number-cell">0</div>
+          <div class="cell katya-cell">,</div>
+        </div>
+      </div>
+      <div class="calculator-item">
+        <div class="katya">
+          <div class="cell katya-cell">÷</div>
+          <div class="cell katya-cell">×</div>
+          <div class="cell katya-cell">-</div>
+          <div class="cell katya-cell">+</div>
+          <div class="cell katya-cell">=</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
+<script>
+  let result = 0;
+  let actionSign = ''
+
+  onload = function () {
+    let calculator = document.getElementById('calculator');
+    let textArea = document.getElementById('calculator-text');
+    let history = document.getElementById('calculator-history');
+    calculator.onclick = function (event) {
+      let target = event.target;
+      if (target.className == 'cell number-cell') {
+        if (textArea.innerHTML.length > 18) return
+        if (textArea.innerHTML == '0') textArea.innerHTML = event.target.innerHTML;
+        else textArea.innerHTML += event.target.innerHTML;
+      }
+      else {
+        let sign = target.innerHTML;
+        switch (sign) {
+          case '⌫':
+            if (textArea.innerHTML.length - 1 == 0) textArea.innerHTML = '0'
+            else textArea.innerHTML = textArea.innerHTML.substring(0, textArea.innerHTML.length - 1);
+            break;
+          case 'CE':
+            textArea.innerHTML = '0';
+            break;
+          case 'C':
+            result = 0;
+            textArea.innerHTML = '0';
+            history.innerHTML = '0';
+            break;
+          case '=':
+            history.innerHTML = `${result} ${actionSign} ${textArea.innerHTML} =`
+            switch (actionSign) {
+              case '+':
+                result += parseInt(textArea.innerHTML);
+                break;
+              case '-':
+                result -= parseInt(textArea.innerHTML);
+                break;
+              case '×':
+                result *= parseInt(textArea.innerHTML);
+                break;
+              case '÷':
+                result /= parseInt(textArea.innerHTML);
+                break;
+            }
+            textArea.innerHTML = result;
+            break;
+          case '√':
+            result = Math.sqrt(parseInt(textArea.innerHTML));
+            history.innerHTML = `√${textArea.innerHTML} =`
+            textArea.innerHTML = result;
+            break;
+          case 'x²':
+            result = parseInt(textArea.innerHTML) ** 2;
+            history.innerHTML = `${textArea.innerHTML}² =`
+            textArea.innerHTML = result;
+            break;
+          default:
+            result = parseInt(textArea.innerHTML);
+            actionSign = sign;
+            textArea.innerHTML = ''
+            history.innerHTML = `${result} ${actionSign}`
+            break;
+        }
+      }
+    }
+  }
+</script>
+
+</html>
