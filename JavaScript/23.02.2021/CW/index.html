@@ -129,7 +129,7 @@
   function selectOption(n) {
     let select = document.getElementById('video-list');
     select.selectedIndex += n;
-    select.options[select.selectedIndex].selected = true;
+    selectVideo({"target":select.options[select.selectedIndex]});
   }
 </script>
 
