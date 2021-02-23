@@ -1,4 +1,4 @@
-# Cinema Hallplan
+# Video / Audio Player
 Implement the Video / Audio Player.
 
 ## Contributing
