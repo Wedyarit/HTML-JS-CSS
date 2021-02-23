@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<script>
+  var mediaJSONs = [
+    {
+      "description": "Big Buck Bunny tells the story of a giant rabbit with a heart bigger than himself. When one sunny day three rodents rudely harass him, something snaps... and the rabbit ain't no bunny anymore! In the typical cartoon tradition he prepares the nasty rodents a comical revenge.",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"],
+      "subtitle": "By Blender Foundation",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
+      "title": "Big Buck Bunny"
+    },
+    {
+      "description": "The first Blender Open Movie from 2006",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"],
+      "subtitle": "By Blender Foundation",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg",
+      "title": "Elephant Dream"
+    },
+    {
+      "description": "For Bigger Blazes",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"],
+      "subtitle": "By Google",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg",
+      "title": "For Bigger Blazes"
+    },
+    {
+      "description": "For Bigger Escape",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"],
+      "subtitle": "By Google",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg",
+      "title": "For Bigger Escape"
+    },
+    {
+      "description": "For Bigger Fun",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"],
+      "subtitle": "By Google",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg",
+      "title": "For Bigger Fun"
+    },
+    {
+      "description": "For Bigger Joyrides",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"],
+      "subtitle": "By Google",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerJoyrides.jpg",
+      "title": "For Bigger Joyrides"
+    },
+    {
+      "description": "For Bigger Meltdowns",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"],
+      "subtitle": "By Google",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerMeltdowns.jpg",
+      "title": "For Bigger Meltdowns"
+    },
+    {
+      "description": "Sintel is an independently produced short film, initiated by the Blender Foundation as a means to further improve and validate the free/open source 3D creation suite Blender.",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"],
+      "subtitle": "By Blender Foundation",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg",
+      "title": "Sintel"
+    },
+    {
+      "description": "Smoking Tire takes the all-new Subaru Outback to the highest point we can find in hopes our customer-appreciation Balloon Launch will get some free T-shirts into the hands of our viewers.",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"],
+      "subtitle": "By Garage419",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/SubaruOutbackOnStreetAndDirt.jpg",
+      "title": "Subaru Outback On Street And Dirt"
+    },
+    {
+      "description": "Tears of Steel was realized with crowd-funding by users of the open source 3D creation tool Blender. Target was to improve and test a complete open and free pipeline for visual effects in film - and to make a compelling sci-fi film in Amsterdam, the Netherlands.",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"],
+      "subtitle": "By Blender Foundation",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/SubaruOutbackOnStreetAndDirt.jpg",
+      "title": "Tears of Steel"
+    },
+    {
+      "description": "The Smoking Tire heads out to Adams Motorsports Park in Riverside, CA to test the most requested car of 2010, the Volkswagen GTI. Will it beat the Mazdaspeed3's standard-setting lap time? Watch and see...",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4"],
+      "subtitle": "By Garage419",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg",
+      "title": "Volkswagen GTI Review"
+    },
+    {
+      "description": "The Smoking Tire is going on the 2010 Bullrun Live Rally in a 2011 Shelby GT500, and posting a video from the road every single day!",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4"],
+      "subtitle": "By Garage419",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg",
+      "title": "We Are Going On Bullrun"
+    },
+    {
+      "description": "The Smoking Tire meets up with Chris and Jorge from CarsForAGrand.com to see just how far $1,000 can go when looking for a car.The Smoking Tire meets up with Chris and Jorge from CarsForAGrand.com to see just how far $1,000 can go when looking for a car.",
+      "sources": ["http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4"],
+      "subtitle": "By Garage419",
+      "thumb": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg",
+      "title": "What care can you get for a grand?"
+    }
+  ];
+</script>
+
+<script>
+  function selectVideo(event) {
+    let mediaJSON = mediaJSONs.filter((mediaJSON) => mediaJSON.title == event.target.value)[0];
+    document.getElementById('title').innerHTML = mediaJSON.title;
+    document.getElementById('description').innerHTML = mediaJSON.description;
+    document.getElementById('author').innerHTML = mediaJSON.subtitle;
+    document.getElementById('video').src = mediaJSON.sources[0];
+    document.getElementById('thumbnail').src = mediaJSON.thumb;
+  }
+
+  onload = function () {
+    let list = document.getElementById('video-list');
+    for (let i = 0; i < mediaJSONs.length; i++) {
+      let option = document.createElement('option');
+      option.value = mediaJSONs[i].title;
+      option.innerHTML = mediaJSONs[i].title;
+      list.appendChild(option);
+    }
+
+    list.addEventListener("change", selectVideo);
+  }
+</script>
+
+<script>
+  function selectOption(n) {
+    let select = document.getElementById('video-list');
+    select.selectedIndex += n;
+    select.options[select.selectedIndex].selected = true;
+  }
+</script>
+
+<style>
+  .video-player {
+    width: 700px;
+    height: 800px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .player {
+    width: 100%;
+    height: 50%;
+    background-color: black;
+  }
+
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .container-item {
+    width: 50%;
+    height: 50%;
+    display: inline-block;
+  }
+  
+  .info {
+    width: 50%;
+    border: 1px black solid;
+  }
+
+  .select {
+    display: inline-block;
+    width: 100%;
+    height: 200px;
+  }
+</style>
+
+<body>
+  <div class="video-player">
+    <div class="player"><video id="video" width="100%" height="100%" controls autoplay src=""></video></div>
+    <div class="container">
+      <div class="container-item video-list"><select id="video-list" class="select" size="5"></select></div>
+      <div class="container-item description">
+        <span id="title"></span><br>
+        <span id="description"></span><br>
+        <span id="author"></span><br>
+        <img id="thumbnail"  width="50%" height="50%" src="" alt="">
+      </div>
+    </div>
+    <input type="button" value="←" onclick="selectOption(-1)">
+    <input type="button" value="→" onclick="selectOption(1)">
+  </div>
+</body>
+
+</html>
