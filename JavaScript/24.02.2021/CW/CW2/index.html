@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<script>
+  function createArray(length) {
+    var arr = new Array(length || 0),
+      i = length;
+
+    if (arguments.length > 1) {
+      var args = Array.prototype.slice.call(arguments, 1);
+      while (i--) arr[length - 1 - i] = createArray.apply(this, args);
+    }
+
+    return arr;
+  }
+
+  // Random inetger in range
+  function randomInteger(min, max) {
+    let rand = min - 0.5 + Math.random() * (max - min + 1);
+
+    return Math.round(rand);
+  }
+
+  function createTable() {
+    size = parseInt(document.getElementById('size').value);
+    let tbody = document.getElementById("tbody"); 3
+
+    while (tbody.lastElementChild)
+      tbody.removeChild(tbody.lastElementChild);
+
+    for (let i = 0; i < size; i++) {
+      let tr = document.createElement('tr');
+      for (let j = 0; j < size; j++) {
+        let td = document.createElement('td');
+        td.className = "closed";
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    }
+
+    fillTable();
+  }
+
+  function markCell(i, j) {
+    if (map[i - 1] !== undefined && map[i - 1] != '•')
+      map[i - 1][j]++;
+    if (map[i + 1] !== undefined && map[i + 1][j] != '•')
+      map[i + 1][j]++;
+    if (map[i][j - 1] !== undefined && map[i][j - 1] != '•')
+      map[i][j - 1]++;
+    if (map[i][j + 1] !== undefined && map[i][j + 1] != '•')
+      map[i][j + 1]++;
+    if (map[i - 1] !== undefined && map[i - 1][j - 1] !== undefined && map[i - 1][j - 1] != '•')
+      map[i - 1][j - 1]++;
+    if (map[i + 1] !== undefined && map[i + 1][j + 1] !== undefined && map[i + 1][j + 1] != '•')
+      map[i + 1][j + 1]++;
+    if (map[i - 1] !== undefined && map[i - 1][j + 1] !== undefined && map[i - 1][j + 1] != '•')
+      map[i - 1][j + 1]++;
+    if (map[i + 1] !== undefined && map[i + 1][j - 1] !== undefined && map[i + 1][j - 1] != '•')
+      map[i + 1][j - 1]++;
+  }
+
+</script>
+
+<!--Game-->
+<script>
+  let bombsNumber = 10;
+  let map;
+  let size;
+
+  function fillTable() {
+    map = createArray(size, size);
+
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        map[i][j] = 0;
+      }
+    }
+
+    for (let i = 0; i < bombsNumber; i++) {
+      map[randomInteger(0, size - 1)][randomInteger(0, size - 1)] = '•';
+    }
+
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        if (map[i][j] == '•') {
+          markCell(i, j)
+        }
+      }
+
+      formTable();
+    }
+  }
+
+  function formTable() {
+    let tds = document.getElementsByTagName('td');
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        if (isNaN(map[i][j]) || map[i][j] == '•') tds[i * size + j].innerHTML = '💣';
+        else if (map[i][j] != 0) tds[i * size + j].innerHTML = map[i][j];
+      }
+    }
+  }
+</script>
+
+<script>
+  function openCell(event) {
+    let trs = document.getElementsByTagName('tr');
+    let j = event.target.cellIndex;
+    let i = event.target.parentElement.rowIndex;
+    if (map[i][j] == 0) {
+      while (map[i][j] == 0) {
+        map[i][j] = '-'
+        trs[i].children[j].className = 'opened '
+        if (map[i + 1] != undefined && map[i + 1][j] == 0) {
+          i++;
+        }
+        else if (map[i - 1] != undefined && map[i - 1][j] == 0) {
+          i--;
+        }
+        else if (map[i][j + 1] != undefined && map[i][j + 1] == 0) {
+          j++;
+        }
+        else if (map[i][j - 1] != undefined && map[i][j - 1] == 0) {
+          j--;
+        }
+      }
+    } else if (map[i][j] == '•' || isNaN(map[i][j]))
+      trs[i].children[j].className = 'mistake'
+    else {
+      trs[i].children[j].className = 'opened'
+    }
+  }
+
+  onload = function () {
+    let tbody = document.getElementById('tbody');
+    tbody.addEventListener("click", openCell);
+  }
+</script>
+
+<style>
+  table {
+    border-collapse: collapse;
+  }
+
+  td {
+    width: 28px;
+    height: 28px;
+    text-align: center;
+  }
+
+  td.opened {
+    border: black 1px solid;
+    background-color: white;
+  }
+
+  td.closed {
+    border: white 1px solid;
+    background-color: rgb(158, 158, 158);
+  }
+
+  td.mistake {
+    border: white 1px solid;
+    background-color: rgb(141, 25, 25);
+  }
+</style>
+
+<body>
+  <div class="input">
+    <input type="number" name="size" id="size">
+    <input type="button" value="Создать" onclick="createTable()">
+  </div>
+  <br>
+
+  <div class="field">
+    <table>
+      <tbody id="tbody">
+
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>
