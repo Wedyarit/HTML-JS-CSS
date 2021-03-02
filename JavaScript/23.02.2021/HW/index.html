@@ -4,8 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    div {
+      border: black 1px solid;
+    }
+
+    .parking-system {
+      width: 100%;
+      height: 500px;
+    }
+
+    .container {
+      display: flex;
+      height: 50%;
+    }
+
+    .container-item {
+      height: 100%;
+      width: 50%;
+      display: inline-block;
+    }
+
+    .parking-places{
+      width: 100%;
+      height: 50%;
+    }
+  </style>
 </head>
 <body>
-  
+  <div class="parking-system">
+    <div class="container">
+      <div class="container-item registration"></div><!--
+      --><div class="container-item car-preview"></div>
+    </div>
+    <div class="parking-places"></div>
+  </div>
 </body>
 </html>
