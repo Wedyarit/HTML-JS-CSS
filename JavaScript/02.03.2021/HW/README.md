@@ -1,5 +1,5 @@
-# JSON subject filter
-Implement JSON filter.
+# HT Template
+HT description.
 
 ## Contributing
 The work was done and prepared by [@Wedyarit (Vyacheslav)](https://github.com/Wedyarit).
