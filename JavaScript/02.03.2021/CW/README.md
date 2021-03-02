@@ -1,4 +1,4 @@
-# JQuery
+# JQuery :confused:
 Include jQuery, make sure the library object is available. Note: try connecting from different CDN storages, and using a local file.
 
 ## Contributing
