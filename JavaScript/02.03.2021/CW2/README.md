@@ -1,5 +1,5 @@
-# CT Template
-CT template description.
+# Diary
+Implement diary system.
 
 ## Contributing
 The work was done and prepared by [@Wedyarit (Vyacheslav)](https://github.com/Wedyarit).
