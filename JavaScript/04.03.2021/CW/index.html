@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="text/javascript" src="../../libs/jquery-3.5.1.min.js"></script>
+  <script>
+    function getRandomColor() {
+      let letters = '0123456789ABCDEF';
+      let color = '#'
+      for (let i = 0; i < 6; i++)
+        color += letters[Math.floor(Math.random() * 16)];
+
+      return color;
+    }
+  </script>
+</head>
+
+<body>
+  <div id="text">
+    <p><span>Lorem ipsum <strong>dolor</strong> sit amet consectetur adipisicing elit. <em>Ut</em> accusantium esse
+        aliquid <strong>tempora</strong> voluptatum! Sit, provident. Obcaecati <strong>tempora</strong> blanditiis nam
+        <em>itaque</em>? Pariatur aliquid facere, aut mollitia quasi nostrum consectetur totam?</span><span>Mollitia
+        minima atque, porro adipisci ipsam asperiores recusandae. <strong>Atque</strong> voluptas accusantium nobis
+        dolores at! Commodi est eveniet tempora, <strong>explicab</strong>o enim officia exercitationem reiciendis rerum
+        optio <em>quod</em> incidunt, numquam dignissimos quos.</span></p>
+    <p><span>Quae saepe <em>recusandae</em>, accusamus veniam <em>vel</em> doloremque, dignissimos
+        <strong>necessitatibus</strong> neque, ratione dolores optio nam. Modi <em>dolorum</em> voluptatem quod, libero,
+        asperiores reprehenderit hic sed facere accusantium necessitatibus non eum vel laboriosam.</span><span>Nostrum
+        harum quasi veritatis illum ullam reprehenderit est voluptatibus optio odio beatae, deserunt soluta eum tempore
+        reiciendis maxime provident voluptatum? Veritatis odit <strong>architecto</strong> voluptates <em>nemo</em> sed
+        rerum ipsam a dicta!</span></p>
+    <p><span><em>Nemo</em> ullam minus consequuntur recusandae maiores perferendis quibusdam reiciendis
+        <strong>aliquid</strong> sit laborum, earum laboriosam maxime perspiciatis accusantium consectetur rerum? Eaque
+        iure sed quia neque a! Cupiditate beatae ex ea cumque.</span><span>Ad voluptates exercitationem voluptate
+        <em>provident</em> corrupti nulla aut quo iste. Iusto, <strong>alias</strong> minima accusamus dolore quaerat
+        excepturi eum <strong>saepe</strong> id facere, eveniet ad, fugit <em>veritatis</em>. Atque officia aperiam
+        inventore quaerat.</span></p>
+    <p><span>Temporibus, vero hic in quidem, dolore <strong>optio</strong> alias odio <em>expedita</em> architecto nemo
+        quas, vel <strong>voluptatem</strong>. Animi iste optio vel aut sint sapiente ipsum! Nobis non
+        <strong>iusto</strong> molestiae dignissimos quos esse?</span><span>Omnis fugit, expedita aut ipsum autem
+        facilis architecto dignissimos quis, debitis beatae dicta. Harum, aliquid. Expedita omnis facilis culpa
+        aspernatur <em>tempora</em> magni, recusandae fuga voluptates distinctio ut, error iste odio!</span></p>
+    <p><span>Doloremque, beatae dignissimos nostrum praesentium eligendi illo <strong>dolorem</strong> velit maiores
+        atque corrupti doloribus animi reiciendis et fugiat, minus pariatur sequi eveniet. Pariatur facere suscipit
+        molestias aperiam assumenda omnis consequuntur quasi!</span><span>Necessitatibus reiciendis, minima itaque
+        adipisci velit animi voluptates voluptas repellat, accusantium <strong>totam</strong> enim exercitationem
+        asperiores explicabo hic <em>perspiciatis</em> aspernatur amet inventore consectetur <em>deserunt</em> tempore.
+        Dolorem commodi similique molestias tenetur dolorum?</span></p>
+  </div>
+</body>
+<script type="text/javascript">
+  $("strong, em").mouseover(function () {
+    $(this).css("color", getRandomColor());
+    $(this).animate({fontSize: '20px', opacity: '1'}, "slow");
+  });
+
+  $("strong, em").mouseout(function () {
+    $(this).css("color", "black");
+    $(this).animate({fontSize: '14px', opacity: '1'}, "slow");
+  });
+</script>
+
+</html>
