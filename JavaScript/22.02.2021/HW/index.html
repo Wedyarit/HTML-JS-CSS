@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      h1 {
+        font-family: Arial;
+      }
+      a {
+        color: #369;
+        font: 1em Arial, sans-serif;
+      }
+      .play {
+        width: 100px;
+        height: 100px;
+        background-color: #369;
+        border-radius: 100px;
+        position: fixed;
+        top: 300px;
+      }
+    </style>
+  </head>
+  <script>
+    onload = function () {
+      let href = document.getElementById("href");
+      let play = document.getElementById("play");
+
+      href.onclick = function () {
+        let x = -50;
+        setInterval(function () {
+          if (x > 50) clearInterval(this);
+          x += 1;
+          play.style.left = 50 * (50 + x) + "px";
+          play.style.top = x ** 2 + "px";
+        }, 20);
+      };
+    };
+  </script>
+
+  <body>
+    <h1>Задачи по JavaScript</h1>
+    <div id="play" class="play"></div>
+    <a href="#" id="href">Анимация</a>
+  </body>
+</html>
