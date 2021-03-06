@@ -1,11 +1,190 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+	<meta charset="utf-8" />
+	<title>Список книг Game of Thrones</title>
+	<style type="text/css">
+		h1 {
+			color: #7c795d;
+			font-family: 'Trocchi', serif;
+			font-size: 30px;
+			font-weight: normal;
+			line-height: 48px;
+			margin: 0;
+		}
+
+		td,
+		th {
+			width: 20rem;
+			height: 2rem;
+			border: 1px solid #ccc;
+			text-align: center;
+		}
+
+		th {
+			background: lightblue;
+			border-color: white;
+		}
+
+		body {
+			padding: 1rem;
+		}
+
+		a {
+			display: block;
+			cursor: pointer;
+		}
+	</style>
+	<script type="text/javascript">
+		let books = [];
+		class Book {
+			// Конструктор
+			constructor(objBook) {
+				this.name = objBook.name;
+				this.isbn = objBook.isbn;
+				this.authors = "";
+				for (let i = 0; i < objBook.authors.length; i++) {
+					this.authors += objBook.authors[i] + " ";
+				}
+				this.numberOfPages = objBook.numberOfPages;
+				this.characters = objBook.characters;
+			}
+			// Функция создает строку таблицы
+			createTableRow() {
+				let nodeRow = document.createElement('TR');
+				let node = document.createElement('TD');
+				let anchor = document.createElement('a');
+				anchor.addEventListener("click", getCharacters);
+				anchor.href = "#";
+				anchor.innerText = this.name;
+				node.appendChild(anchor)
+				nodeRow.appendChild(node);
+
+				node = document.createElement('TD');
+				node.innerText = this.authors;
+				nodeRow.appendChild(node);
+
+				node = document.createElement('TD');
+				node.innerText = this.numberOfPages;
+				nodeRow.appendChild(node);
+
+				node = document.createElement('TD');
+				node.innerText = this.isbn;
+				nodeRow.appendChild(node);
+
+				// Добавляем новую строку в таблицу
+				let table = document.getElementById('maintable');
+				table.appendChild(nodeRow);
+			}
+		}
+
+		class Character {
+			// Конструктор
+			constructor(objCharacter) {
+				this.name = objCharacter.name;
+				this.gender = objCharacter.gender;
+				this.culture = objCharacter.culture;
+				this.born = objCharacter.born;
+				this.died = objCharacter.died;
+			}
+			// Функция создает строку таблицы
+			createTableRow() {
+				let nodeRow = document.createElement('TR');
+				let node = document.createElement('TD');
+				let anchor = document.createElement('a');
+				anchor.href = "#";
+				anchor.innerText = this.name;
+				node.appendChild(anchor)
+				nodeRow.appendChild(node);
+
+				node = document.createElement('TD');
+				node.innerText = this.gender;
+				nodeRow.appendChild(node);
+
+				node = document.createElement('TD');
+				node.innerText = this.culture;
+				nodeRow.appendChild(node);
+
+				node = document.createElement('TD');
+				node.innerText = this.born;
+				nodeRow.appendChild(node);
+
+				node = document.createElement('TD');
+				node.innerText = this.died;
+				nodeRow.appendChild(node);
+
+				// Добавляем новую строку в таблицу
+				let table = document.getElementById('characters-table');
+				table.appendChild(nodeRow);
+			}
+		}
+
+
+		function getCharacters(event) {
+			book = books.filter((book) => book.name === event.target.innerText)[0];
+			for (var j = 0; j < book.characters.length; j++) {
+				let xhr = new XMLHttpRequest();
+				xhr.open("GET", book.characters[j], true);
+				xhr.onload = function (e) {
+					if (xhr.readyState === 4) {
+						if (xhr.status === 200) {
+							let rspns = JSON.parse(xhr.response);
+							new Character(rspns).createTableRow();
+						}
+					}
+				};
+				xhr.send(null);
+			}
+		}
+
+		// Запрашиваем список книг
+		function getBooks() {
+			let xhr = new XMLHttpRequest();
+			xhr.open("GET", "https://anapioficeandfire.com/api/books", true);
+			xhr.onload = function (e) {
+				if (xhr.readyState === 4) {
+					if (xhr.status === 200) {
+						let rspns = JSON.parse(xhr.response);
+						for (var i = 0; i < rspns.length; i++) {
+							books[i] = new Book(rspns[i]);
+							books[i].createTableRow();
+						}
+					}
+				}
+			};
+			xhr.send(null); // При POST включается содержание запроса
+		}
+	</script>
 </head>
+
 <body>
-  
+	<h1>Список книг Game of Thrones</h1>
+	<p>
+		<input type="button" value="Получить список" onclick="getBooks()">
+	</p>
+	<p>
+	<table id="maintable">
+		<tr>
+			<th>Название</th>
+			<th>Автор</th>
+			<th>Количество страниц</th>
+			<th>ISBN</th>
+		</tr>
+	</table>
+	</p>
+	<p>
+	<table id="characters-table">
+		<tr>
+			<th>Имя</th>
+			<th>Пол</th>
+			<th>Национальность</th>
+			<th>Рождение</th>
+			<th>Смерть</th>
+		</tr>
+	</table>
+	</p>
 </body>
+
 </html>
