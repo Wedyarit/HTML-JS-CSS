@@ -1,11 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    .wrapper {
+      width: 350px;
+      height: 150px;
+      background: rgb(255, 254, 197);
+      padding: 5px;
+    }
+
+    .tab {
+      border-bottom: 0;
+      margin-right: 5px;
+      width: 100px;
+      outline: none;
+    }
+
+    .active {
+      background: rgb(223, 255, 197);
+    }
+
+    .passive {
+      background: rgb(241, 116, 107);
+    }
+  </style>
 </head>
+
 <body>
-  
+  <div id="wrapper">
+    <div data-tabname="one">Закладка один</div>
+    <div data-tabname="two">Закладка два</div>
+    <div data-tabname="three">Закладка три</div>
+  </div>
+  <script>
+    function asTabs(node) {
+      node.className = "wrapper";
+
+      let bookmarks = document.createElement("div");
+      bookmarks.className = "bookmarks";
+      node.insertBefore(bookmarks, node.firstElementChild);
+
+      let elementsTab = Array.prototype.filter.call(node.children, (child) => child.getAttribute("data-tabname"));
+      Array.prototype.forEach.call(elementsTab, function (child, index) {
+        let bookmark = document.createElement("button");
+        bookmark.textContent = child.getAttribute("data-tabname");
+        child.style.display = "none";
+        bookmark.className = "tab passive";
+        bookmark.addEventListener("click", function (event) {
+          let bookmarkClassNames = node.getElementsByClassName("tab active");
+          Array.prototype.forEach.call(bookmarkClassNames, button => button.className = "tab passive");
+          Array.prototype.forEach.call(elementsTab, childWrapper => childWrapper.style.display = "none");
+          child.style.display = "";
+          event.target.className = "tab active";
+        });
+        bookmarks.appendChild(bookmark);
+      });
+      node.firstElementChild.firstElementChild.className = "tab active";
+    }
+
+    asTabs(document.querySelector("#wrapper"));
+  </script>
 </body>
+
 </html>
