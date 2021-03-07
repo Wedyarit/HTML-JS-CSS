@@ -1,11 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    h1 {
+      font-family: Arial;
+    }
+
+    a {
+      color: #369;
+      font: 1em Arial, sans-serif;
+    }
+
+    .play {
+      width: 100px;
+      height: 100px;
+      background-color: #369;
+      border-radius: 100px;
+      position: fixed;
+      top: 300px;
+    }
+  </style>
 </head>
+
 <body>
-  
+  <div id="play" class="play"></div>
+  <a href="#" id="href">Анимация</a>
 </body>
+<script>
+  function parabola(a, b, c) {
+    let x = -50;
+    setInterval(function () {
+      if (x > 50) clearInterval(this);
+      x += 1;
+      play.style.left = x + "px";
+      play.style.top = a * (x ** 2) + b * x + c + "px";
+    }, 20);
+  }
+
+  onload = function () {
+    let href = document.getElementById("href");
+    let play = document.getElementById("play");
+
+    href.onclick = function () {
+      parabola(-0.01, 10, 0);
+    };
+  };
+</script>
+
 </html>
