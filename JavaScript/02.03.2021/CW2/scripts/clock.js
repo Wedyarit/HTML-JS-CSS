@@ -1,5 +1,5 @@
 function clock() {
-        var time = new Date(),
+    let time = new Date(),
         hours = time.getHours(),
         minutes = time.getMinutes(),
         seconds = time.getSeconds();
@@ -12,6 +12,3 @@ function clock() {
         return standIn;
     }
 }
-    
-clock();
-setInterval(clock, 1000);

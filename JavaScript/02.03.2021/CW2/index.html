@@ -4,13 +4,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Diary</title>
+
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/checklist.css">
-  <link rel="stylesheet" href="css/calendar.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="styles/checklist.css">
+  <link rel="stylesheet" href="styles/calendar.css">
+  <link rel="stylesheet" href="styles/style.css">
+
   <script src="scripts/script.js"></script>
   <script src="scripts/clock.js"></script>
   <script src="scripts/calendar.js"></script>
@@ -97,25 +100,6 @@
           <div id="showcase-wrapper">
             <div id="myCalendarWrapper"></div>
           </div>
-          <script src="scripts/calendar/CalendarPicker.js"></script>
-
-          <script>
-            const myCalender = new CalendarPicker("#myCalendarWrapper", {
-              min: new Date(),
-              max: new Date(new Date().getFullYear() + 1, 0)
-            });
-
-            myCalender.onValueChange((currentValue) => {
-              let task = tasks.filter(task => task.date.toString() === currentValue.toString())[0];
-              let checklist = document.getElementById('checklist');
-              while (checklist.lastChild)
-                checklist.removeChild(checklist.lastChild);
-              if (task == undefined) return;
-              for (let i = 0; i < task.contents.length; i++)
-                addCheck(i, task.contents[i]);
-
-            });
-          </script>
         </div>
       </div>
     </div>
@@ -129,6 +113,5 @@
       <p class="copyright">Diary © 2021</p>
     </footer>
 </body>
-<script src="scripts/clock.js"></script>
 
 </html>
