@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="text/javascript" src="../../libs/jquery-3.5.1.min.js"></script>
+</head>
+
+<body>
+  <select name="categories" id="categories"></select>
+  <p id="joke"></p>
+</body>
+<script>
+  $('#categories').change(function (event) {
+    $.ajax({
+      url: `https://api.chucknorris.io/jokes/random?category=${event.target.value}&hl=en&sl=en&tl=ru`,
+      success: function (data) {
+        document.getElementById('joke').innerHTML = (data.value);
+      }
+    });
+  })
+
+  $.ajax({
+    url: "https://api.chucknorris.io/jokes/categories",
+    success: function (categories) {
+      for (let i = 0; i < categories.length; i++) {
+        let option = document.createElement('option');
+        option.value = categories[i];
+        option.innerHTML = categories[i];
+        document.getElementById('categories').appendChild(option);
+      }
+    }
+  });
+
+</script>
+
+</html>
