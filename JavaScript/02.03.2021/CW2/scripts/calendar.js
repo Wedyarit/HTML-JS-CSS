@@ -20,6 +20,7 @@ function CalendarPicker(element, options) {
     this.today = this.date;
 
     this.value = this.date;
+    this.previousValue = undefined;
 
     this.min = options.min;
     this.max = options.max;
@@ -117,6 +118,7 @@ CalendarPicker.prototype._insertCalendarIntoWrapper = function () {
         if (event.target.nodeName.toLowerCase() === this.calendarDayElementType && !event.target.classList.contains('disabled')) {
             Array.from(document.querySelectorAll('.selected')).forEach(element => element.classList.remove('selected'));
             event.target.classList.add('selected');
+            this.previousValue = this.value;
             this.value = event.target.value;
             this.onValueChange(this.callback);
         }
@@ -214,14 +216,10 @@ CalendarPicker.prototype._insertDaysIntoGrid = function () {
 }
 CalendarPicker.prototype._updateCalendar = function () {
     this.date = new Date(this.year, this.month);
-
     this._setDateText();
-
     this.day = this.date.getDay();
     this.month = this.date.getMonth();
     this.year = this.date.getFullYear();
-
-    // Cannot use arrow-functions for IE support :(
     var that = this;
     window.requestAnimationFrame(function () {
         that.calendarHeaderTitle.textContent = that.listOfAllMonthsAsText[that.month] + ' - ' + that.year;
@@ -230,7 +228,7 @@ CalendarPicker.prototype._updateCalendar = function () {
 }
 
 CalendarPicker.prototype.onValueChange = function (callback) {
-    if (this.callback) return this.callback(this.value);
+    if (this.callback) return this.callback(this.value, this.previousValue);
     this.callback = callback;
 }
 

@@ -1,0 +1,47 @@
+.triangle {
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 0 200px 200px 0;
+	transform: rotate(270deg);
+	border-color: transparent #ffa6007e transparent transparent;
+	left: 0;
+	top: 0;
+	position: absolute;
+	z-index: -1;
+}
+
+.diary {
+	font-family: "Inter", sans-serif;
+	font-size: 20px;
+}
+
+.topnav {
+	overflow: hidden;
+}
+
+.topnav a {
+	float: right;
+	text-align: center;
+	padding: 14px 16px;
+	margin: 10px;
+	text-decoration: none;
+	font-size: 17px;
+	border-radius: 20px;
+}
+
+.topnav a.title {
+	border: rgb(165, 165, 165) 1px solid;
+	float: right;
+}
+
+.topnav a:hover,
+.button:hover {
+	cursor: pointer;
+	background-color: rgba(235, 235, 235, 0.527);
+	-webkit-transition: background 0.5s ease, color 0.3s ease;
+}
+
+.topnav a.active {
+	background-color: rgba(206, 206, 206, 0.527);
+}

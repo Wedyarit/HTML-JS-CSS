@@ -1,0 +1,25 @@
+#task-plan {
+	background-color: rgba(0, 145, 0, 0.5);
+	width: 100%;
+	height: 800px;
+	display: flex;
+	align-items: center;
+	margin-top: 400px;
+	margin-bottom: 400px;
+}
+
+.container {
+	height: 100%;
+	max-width: 90% !important;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-areas: "clock tasks new" "calendar tasks new";
+}
+
+.container>.item {
+	height: 100%;
+	background-color: blanchedalmond;
+	border: black 1px solid;
+	display: flex;
+	align-items: center;
+}

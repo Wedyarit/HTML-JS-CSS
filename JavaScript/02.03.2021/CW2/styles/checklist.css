@@ -3,17 +3,16 @@
 	--text: #414856;
 	--check: #4F29F0;
 	--disabled: #C3C8DE;
-	--width: 100px;
-	--height: 140px;
+	--width: 100%;
+	--height: auto;
 	--border-radius: 10px;
 	background: var(--background);
 	width: var(--width);
 	height: var(--height);
 	border-radius: var(--border-radius);
 	position: relative;
-
-  display: grid;
-  margin: auto;
+	display: grid;
+	margin: auto;
 	grid-template-columns: 30px auto;
 	align-items: center;
 }
