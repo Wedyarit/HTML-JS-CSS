@@ -7,7 +7,7 @@ function clock() {
         month = time.getMonth(),
         year = time.getFullYear();
 
-    document.querySelectorAll('.clock')[0].innerHTML = + harold(day) + "." + harold(month) + "." + harold(year) + " " + harold(hours) + ":" + harold(minutes) + ":" + harold(seconds);
+    document.querySelectorAll('.clock')[0].innerHTML = + harold(day) + "." + harold(month + 1) + "." + harold(year) + "  " + harold(hours) + ":" + harold(minutes) + ":" + harold(seconds);
 
     function harold(standIn) {
         if (standIn < 10) {

@@ -1,9 +1,9 @@
 #checklist {
 	--background: #ffffff;
 	--text: #414856;
-	--check: #4F29F0;
+	--check: #f07229;
 	--disabled: #C3C8DE;
-	--width: 100%;
+	--width: 60%;
 	--height: auto;
 	--border-radius: 10px;
 	background: var(--background);
@@ -11,7 +11,9 @@
 	height: var(--height);
 	border-radius: var(--border-radius);
 	position: relative;
+	padding: 20px;
 	display: grid;
+	max-height: 80%;
 	margin: auto;
 	grid-template-columns: 30px auto;
 	align-items: center;

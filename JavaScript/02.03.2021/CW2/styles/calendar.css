@@ -1,5 +1,5 @@
 #calendar-wrapper {
-	width: 100%;
+	width: 600px;
 	display: grid;
 	grid-template-rows: 2.5em 1fr;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -14,7 +14,7 @@
 	font-size: 2em;
 	box-sizing: inherit;
 }
-
+	
 #calendar-wrapper header h4 {
 	padding: 0;
 	margin: 0;
@@ -61,7 +61,7 @@
 	margin: 0.4em;
 	padding: 1em 0.2em;
 	width: 90%;
-	background-color: rgba(108, 108, 108, 0.02);
+	background-color: rgba(255, 255, 255, 0.219);
 	border-radius: 3px;
 	border: 2px solid transparent;
 	transition: box-shadow 200ms, border 100ms;
@@ -72,7 +72,7 @@
 #calendar #calendar-grid time.selected,
 #calendar #calendar-grid time.selected:focus {
 	outline: none;
-	border: 2px solid #c64949;
+	border: 2px solid #ffffff;
 	box-sizing: inherit;
 }
 
@@ -82,13 +82,13 @@
 	border: 2px solid transparent;
 	box-sizing: inherit;
 	cursor: not-allowed;
-	background-color: rgba(30, 39, 51, 0.2);
-	box-shadow: 1px 1px rgba(0, 0, 0, 0);
+	background-color: rgba(148, 148, 148, 0.2);
+	box-shadow: 1px 1px rgba(148, 148, 148, 0.2);
 }
 
 #calendar #calendar-grid>*:hover {
-	border: 2px solid rgba(72, 72, 72, 0.5);
-	box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+	border: 2px solid rgba(148, 148, 148, 0.521);
+	box-shadow: 1px 1px rgba(148, 148, 148, 0.534);
 	box-sizing: inherit;
 }
 

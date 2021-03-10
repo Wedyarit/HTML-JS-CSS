@@ -7,18 +7,49 @@ class Task {
 }
 
 let tasks = [];
+let username;
 
+function newUser() {
+    document.getElementById('task-plan').style.display = "none";
+}
 
+function existingUser() {
+    greeting();
+    document.getElementById('join').onclick = function () { window.scrollTo({ top: 1800, behavior: 'smooth' }); }
+}
+
+function continue_() {
+    username = document.getElementById('inputName').value;
+    if (username.length == 0)
+        return;
+    greeting();
+    document.getElementById('task-plan').style.display = "flex";
+    window.scrollTo({ top: 1800, behavior: 'smooth' });
+}
+
+function greeting() {
+    document.getElementById('greeting-message').innerHTML = `Приветствую, ${username}!`;
+    document.getElementsByClassName('form-group')[0].style.display = "none";
+}
 //-----------------// Local Storage //-----------------//
 function loadFromLocalStorage() {
+    username = localStorage.getItem('name');
+    if (username === null) {
+        newUser();
+        return;
+    }
+    else
+        existingUser();
+
     let storage = JSON.parse(localStorage.getItem("tasks"));
-    if (storage === undefined || storage === null || storage.length === 0) return;
     for (let i = 0; i < storage.length; i++)
         tasks.push(new Task(new Date(storage[i].date), storage[i].contents));
 }
 
 function saveToLocalStorage() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
+    if (username.length > 0)
+        localStorage.setItem("name", username);
 }
 
 window.onbeforeunload = closingCode;
@@ -27,6 +58,7 @@ function closingCode() {
     saveToLocalStorage();
     return null;
 }
+
 
 //-----------------// Tasks //-----------------//
 function addTask() {
@@ -37,8 +69,8 @@ function addTask() {
 
     let id = 0;
 
-    if (checklist.lastChild !== null && checklist.lastChild.value !== undefined)
-        id = parseInt(checklist.lastChild.value) + 1;
+    if (!isNaN(checklist.lastChild.htmlFor))
+        id = parseInt(checklist.lastChild.htmlFor) + 1;
     let task = tasks.filter(task => task.date.toString() == calendar.value.toString())[0];
     if (task != undefined) {
         tasks.splice(tasks.indexOf(task), 1);
@@ -54,7 +86,7 @@ function addTask() {
 
 function addCheck(i, content) {
     let checklist = document.getElementById('checklist');
-    if (checklist.lastChild !== null && checklist.lastChild.innerHTML === 'Похоже, планов нет.')
+    if (checklist.lastChild !== null && checklist.lastChild.innerHTML === 'Похоже, планов нет')
         while (checklist.lastChild)
             checklist.removeChild(checklist.lastChild);
 
@@ -77,7 +109,7 @@ function displayTasks(currentValue) {
     while (checklist.lastChild)
         checklist.removeChild(checklist.lastChild);
     if (task == undefined)
-        addCheck(0, "Похоже, планов нет.");
+        addCheck(0, "Похоже, планов нет");
     else
         for (let i = 0; i < task.contents.length; i++)
             addCheck(i, task.contents[i]);
@@ -109,10 +141,68 @@ function initCalendar() {
     });
 }
 
+function initCharts() {
+    var ctx = document.getElementById('chart').getContext('2d');
+    let data = [];
+    let labels = [];
+
+    tasks.forEach(task => { data.push(task.contents.length); labels.push(task.date) });
+
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Количество планов в день',
+                data: data,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
+
 //-----------------// On Page Load //-----------------//
 onload = function () {
     loadFromLocalStorage();
     initCalendar();
+    initCharts();
     displayTasks(calendar.value);
 
     clock();
