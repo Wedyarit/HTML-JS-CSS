@@ -1,27 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <script type="text/javascript" src="../../libs/jquery-3.5.1.min.js"></script>
+  <style>
+    .alignleft {
+      float: left;
+    }
+
+    .alignright {
+      float: right;
+    }
+
+    .post {
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 10px;
+      border: black 1px solid;
+      width: 20%;
+      height: auto;
+    }
+
+    .post-body {
+      width: 90%;
+      margin: auto;
+    }
+
+    #social-network {
+      justify-content: center;
+    }
+    
+    .clear-both {
+      clear: both;
+    }
+
+    h3 {
+      margin-block-start: 0;
+    }
+  </style>
 </head>
+
 <body>
-  <ul>
-    <li>Point 1</li>
-    <li>Point 2</li>
-    <li>Point 3</li>
-    <li>Point 4</li>
-    <li>Point 5</li>
-    <li>Point 6</li>
-    <li>Point 7</li>
-    <li>Point 8</li>
-    <li>Point 9</li>
-    <li>Point 10</li>
-   </ul> 
+  <div id="social-network">
+    <div class="post">
+      <div class="post-body">
+        <p class="alignleft">UserId</p>
+        <p class="alignright">ID</p>
+        <div class="clear-both"></div>
+        <h3>Title</h3>
+        <p>ullam et saepe reiciendis voluptatem adipisci\nsit amet autem assumenda provident rerum culpa\nquis hic
+          commodi nesciunt rem tenetur doloremque ipsam iure\nquis sunt voluptatem rerum illo velit</p>
+      </div>
+    </div>
+    <div class="post">
+      <div class="post-body">
+        <p class="alignleft">UserId</p>
+        <p class="alignright">ID</p>
+        <div class="clear-both"></div>
+        <h3>Title</h3>
+        <p>ullam et saepe reiciendis voluptatem adipisci\nsit amet autem assumenda provident rerum culpa\nquis hic
+          commodi nesciunt rem tenetur doloremque ipsam iure\nquis sunt voluptatem rerum illo velit</p>
+      </div>
+    </div>
+  </div>
 </body>
 <script>
-  let lis = document.getElementsByTagName("li");
-  for (let i = 0; i < lis.length; i++)
-    lis[i].innerHTML = i;
+  
+  $.ajax({
+    url: "https://jsonplaceholder.typicode.com/posts",
+    dataType: "json",
+    method: "GET",
+    success: function (data, textStatus, jqXHR) {
+      data.forEach(element => {
+        let post = document.createElement('div');
+        post.classList.add("post");
+
+        let postBody = document.createElement('div');
+        postBody.classList.add('post-body');
+
+        let userID = document.createElement('p');
+        userID.classList.add('alignleft');
+        userID.innerHTML = data.userId;
+        postBody.appendChild(userID);
+
+        let postID = document.createElement('p');
+        postID.classList.add('alignrigth');
+        postID.innerHTML = data.id;
+        postBody.appendChild(postID);
+
+        let clearBoth = document.createElement('div');
+        clearBoth.classList.add('clear-both');
+        postBody.appendChild(clearBoth);
+
+        let title = document.createElement('h3');
+        title.innerHTML = element.title;
+        postBody.appendChild(title);
+
+        let content = document.createElement('p');
+        content.innerHTML = element.body;
+        postBody.appendChild(content);
+
+        post.appendChild(postBody);
+        document.getElementById('social-network').appendChild(post);
+      });
+    }
+  });
+
 </script>
+
 </html>
