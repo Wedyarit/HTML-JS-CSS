@@ -9,10 +9,12 @@ function clock() {
 
     document.querySelectorAll('.clock')[0].innerHTML = + harold(day) + "." + harold(month + 1) + "." + harold(year) + "  " + harold(hours) + ":" + harold(minutes) + ":" + harold(seconds);
 
-    function harold(standIn) {
-        if (standIn < 10) {
-            standIn = '0' + standIn
-        }
-        return standIn;
+}
+
+
+function harold(standIn) {
+    if (standIn < 10) {
+        standIn = '0' + standIn
     }
+    return standIn;
 }

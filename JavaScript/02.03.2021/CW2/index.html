@@ -20,8 +20,8 @@
   <link rel="stylesheet" href="styles/footer.css">
   <link rel="stylesheet" href="styles/style.css">
 
-  <script src="scripts/script.js"></script>
   <script src="scripts/clock.js"></script>
+  <script src="scripts/script.js"></script>
   <script src="scripts/calendar.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 </head>
@@ -35,7 +35,7 @@
         <a href="#" class="title">
           <img src="assets/diary_logo_1.png" width="15px">
           <span>Ежедневник</span>
-        </a><a class="option" onclick="window.scrollTo({ top: 2400, behavior: 'smooth'});">Статистика</a>
+        </a><a class="option" onclick="window.scrollTo({ top: 3000, behavior: 'smooth'});">Статистика</a>
         <a class="option" onclick="window.scrollTo({ top: 1800, behavior: 'smooth'});">Список планов</a>
         <a class="option active" onclick="window.scrollTo({ top: 0, behavior: 'smooth'});">Главная страница</a>
       </div>
@@ -84,7 +84,7 @@
             </div>
           </fieldset>
         </form><br>
-        <button id="join" type="button" class="btn btn-outline-info" style="font-size: 20px;"
+        <button id="continue" type="button" class="btn btn-outline-info" style="font-size: 20px;"
           onclick="continue_();">Приступим</button>
       </div>
     </div>
@@ -117,11 +117,8 @@
 
     <!-- Statisctics -->
     <div id="statistics">
-      <div style="width: 50%; height: 80%; display: inline-block; border: black 1px solid;">
+      <div style="width: 80%; height: 80%; margin: auto;">
         <canvas id="chart" style="margin: auto;"></canvas>
-      </div>
-      <div style="width: 50%; height: 80%; display: inline-block; border: black 1px solid">
-        <p>Всего заданий: 120</p>
       </div>
     </div>
 

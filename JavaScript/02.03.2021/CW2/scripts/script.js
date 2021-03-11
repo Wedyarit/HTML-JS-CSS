@@ -1,4 +1,4 @@
-// OOP
+//-----------------//  Object Oriented Programming //-----------------//
 class Task {
     constructor(date, contents) {
         this.date = date;
@@ -6,11 +6,13 @@ class Task {
     }
 }
 
+//-----------------//  LS Data //-----------------//
 let tasks = [];
-let username;
+let username = "";
 
 function newUser() {
     document.getElementById('task-plan').style.display = "none";
+    document.getElementById('statistics').style.display = "none";
 }
 
 function existingUser() {
@@ -24,13 +26,16 @@ function continue_() {
         return;
     greeting();
     document.getElementById('task-plan').style.display = "flex";
+    document.getElementById('statistics').style.display = "flex";
     window.scrollTo({ top: 1800, behavior: 'smooth' });
 }
 
 function greeting() {
     document.getElementById('greeting-message').innerHTML = `Приветствую, ${username}!`;
+    document.getElementById('continue').onclick = function () { window.scrollTo({ top: 1800, behavior: 'smooth' }); }
     document.getElementsByClassName('form-group')[0].style.display = "none";
 }
+
 //-----------------// Local Storage //-----------------//
 function loadFromLocalStorage() {
     username = localStorage.getItem('name');
@@ -52,8 +57,7 @@ function saveToLocalStorage() {
         localStorage.setItem("name", username);
 }
 
-window.onbeforeunload = closingCode;
-function closingCode() {
+window.onbeforeunload = function closingCode() {
     removeChecked(calendar.value, calendar.value);
     saveToLocalStorage();
     return null;
@@ -82,6 +86,7 @@ function addTask() {
     }
 
     addCheck(id, content);
+    updateCharts();
 }
 
 function addCheck(i, content) {
@@ -113,6 +118,8 @@ function displayTasks(currentValue) {
     else
         for (let i = 0; i < task.contents.length; i++)
             addCheck(i, task.contents[i]);
+
+    initCharts();
 }
 
 function removeChecked(previousValue) {
@@ -141,14 +148,24 @@ function initCalendar() {
     });
 }
 
+let chart;
+function updateCharts() {
+    let data = [];
+    let labels = [];
+
+    tasks.forEach(task => { data.push(task.contents.length); labels.push(task.date) });
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = data;
+    chart.update();
+}
+
 function initCharts() {
     var ctx = document.getElementById('chart').getContext('2d');
     let data = [];
     let labels = [];
 
-    tasks.forEach(task => { data.push(task.contents.length); labels.push(task.date) });
-
-    var chart = new Chart(ctx, {
+    tasks.forEach(task => { data.push(task.contents.length); labels.push(`${harold(task.date.getDay())}.${harold(task.date.getMonth())}.${task.date.getFullYear()}`) });
+    chart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
