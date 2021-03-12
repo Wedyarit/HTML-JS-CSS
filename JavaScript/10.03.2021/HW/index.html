@@ -20,7 +20,7 @@
       margin-right: auto;
       margin-bottom: 10px;
       border: black 1px solid;
-      width: 20%;
+      width: 30%;
       height: auto;
     }
 
@@ -44,28 +44,7 @@
 </head>
 
 <body>
-  <div id="social-network">
-    <div class="post">
-      <div class="post-body">
-        <p class="alignleft">UserId</p>
-        <p class="alignright">ID</p>
-        <div class="clear-both"></div>
-        <h3>Title</h3>
-        <p>ullam et saepe reiciendis voluptatem adipisci\nsit amet autem assumenda provident rerum culpa\nquis hic
-          commodi nesciunt rem tenetur doloremque ipsam iure\nquis sunt voluptatem rerum illo velit</p>
-      </div>
-    </div>
-    <div class="post">
-      <div class="post-body">
-        <p class="alignleft">UserId</p>
-        <p class="alignright">ID</p>
-        <div class="clear-both"></div>
-        <h3>Title</h3>
-        <p>ullam et saepe reiciendis voluptatem adipisci\nsit amet autem assumenda provident rerum culpa\nquis hic
-          commodi nesciunt rem tenetur doloremque ipsam iure\nquis sunt voluptatem rerum illo velit</p>
-      </div>
-    </div>
-  </div>
+  <div id="social-network"></div>
 </body>
 <script>
   
@@ -83,12 +62,12 @@
 
         let userID = document.createElement('p');
         userID.classList.add('alignleft');
-        userID.innerHTML = data.userId;
+        userID.innerHTML = `UserID: ${element.userId}`;
         postBody.appendChild(userID);
 
         let postID = document.createElement('p');
-        postID.classList.add('alignrigth');
-        postID.innerHTML = data.id;
+        postID.classList.add('alignright');
+        postID.innerHTML = `PostID: ${element.id}`;
         postBody.appendChild(postID);
 
         let clearBoth = document.createElement('div');
