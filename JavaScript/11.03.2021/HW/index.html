@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+  <title>Привет, мир!</title>
+  <script type="text/javascript" src="../../libs/jquery-3.5.1.min.js"></script>
+  <script src=" https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+	<link type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet" />
+</head>
+<body>
+	<div id="accordion">
+    <ul>
+			<li><a href="#tabs-1">Первый заголовок</a></li>
+			<li><a href="#tabs-2">Второй заголовок</a></li>
+			<li><a href="#tabs-3">Третий заголовок</a></li>
+		</ul>
+		<div id="tabs-1">
+			Нажмите по заголовку закрытой вкладки и она развернется, открытая вкладка при этом свернется. По умолчанию, все вкладки будут иметь одинаковую высоту (такую, чтобы содержимое любой из вкладок могло бы туда вместиться).
+		</div>
+    <div id="tabs-2">
+      Содержимое для второго заголовка
+    </div>
+    <div id="tabs-3">
+			Нажмите по заголовку закрытой вкладки и она развернется, открытая вкладка при этом свернется. По умолчанию, все вкладки будут иметь одинаковую высоту (такую, чтобы содержимое любой из вкладок могло бы туда вместиться).
+		</div>
+	</div>
+</body>
+<script>
+  $("#accordion").tabs({ active: 1, heightStyle: "fill", hide: { effect: "blind", duration: 200 }, show: { effect: "blind", duration: 2 00 } });
+</script>
+</html>
